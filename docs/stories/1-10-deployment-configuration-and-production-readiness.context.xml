@@ -1,0 +1,243 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+    <metadata>
+        <epicId>1</epicId>
+        <storyId>1.10</storyId>
+        <title>Deployment Configuration and Production Readiness</title>
+        <status>drafted</status>
+        <generatedAt>2025-10-30</generatedAt>
+        <generator>BMAD Story Context Workflow</generator>
+        <sourceStoryPath>docs/stories/1-10-deployment-configuration-and-production-readiness.md</sourceStoryPath>
+    </metadata>
+
+    <story>
+        <asA>operator</asA>
+        <iWant>deployment configuration and production-ready settings</iWant>
+        <soThat>the service can be deployed reliably to production environments</soThat>
+        <tasks>
+            <task id="1" acs="1">
+                <title>Create Dockerfile for containerization</title>
+                <subtasks>
+                    <subtask>Create Dockerfile at project root</subtask>
+                    <subtask>Use Python 3.11 base image</subtask>
+                    <subtask>Set working directory</subtask>
+                    <subtask>Copy requirements files: requirements.txt, requirements-dev.txt (if needed)</subtask>
+                    <subtask>Install dependencies: pip install -r requirements.txt</subtask>
+                    <subtask>Copy application code: app/ directory</subtask>
+                    <subtask>Set environment variables for production defaults</subtask>
+                    <subtask>Expose port (default 5000 or configurable)</subtask>
+                    <subtask>Configure Gunicorn as entry point</subtask>
+                    <subtask>Use multi-stage build if optimizing for image size</subtask>
+                    <subtask>Add .dockerignore file to exclude unnecessary files</subtask>
+                    <subtask>Test Docker build locally: docker build -t its-convert-xml .</subtask>
+                    <subtask>Test Docker run: docker run -p 5000:5000 its-convert-xml</subtask>
+                </subtasks>
+            </task>
+            <task id="2" acs="1">
+                <title>Create docker-compose.yml for local development</title>
+                <subtasks>
+                    <subtask>Create docker-compose.yml at project root (optional but useful)</subtask>
+                    <subtask>Define service configuration: service name xml-converter, build context, port mapping 5000:5000</subtask>
+                    <subtask>Include environment file reference: .env</subtask>
+                    <subtask>Add healthcheck configuration if needed</subtask>
+                    <subtask>Document docker-compose usage in README or deployment docs</subtask>
+                    <subtask>Test docker-compose: docker-compose up</subtask>
+                </subtasks>
+            </task>
+            <task id="3" acs="2">
+                <title>Configure Gunicorn for production</title>
+                <subtasks>
+                    <subtask>Create gunicorn_config.py at project root</subtask>
+                    <subtask>Configure Gunicorn settings: bind address 0.0.0.0:5000, worker class sync, worker processes 2-4 per CPU core, worker timeout 60+ seconds, log level info</subtask>
+                    <subtask>Configure graceful timeout and worker lifecycle</subtask>
+                    <subtask>Reference Flask app: app:app</subtask>
+                    <subtask>Make configuration environment-aware (development vs production)</subtask>
+                    <subtask>Document Gunicorn configuration options</subtask>
+                    <subtask>Test Gunicorn locally: gunicorn -c gunicorn_config.py app:app</subtask>
+                </subtasks>
+            </task>
+            <task id="4" acs="3">
+                <title>Set up environment configuration</title>
+                <subtasks>
+                    <subtask>Review existing app/config.py for environment variable support</subtask>
+                    <subtask>Ensure configuration supports different deployment stages: Development, Staging, Production</subtask>
+                    <subtask>Create .env.example file with all configurable environment variables</subtask>
+                    <subtask>Document environment variables: FLASK_ENV, FLASK_DEBUG, MAX_REQUEST_SIZE_BYTES, LOG_LEVEL, GUNICORN_WORKERS</subtask>
+                    <subtask>Ensure .env is in .gitignore (should already be)</subtask>
+                    <subtask>Update app/config.py to load from environment variables with sensible defaults</subtask>
+                    <subtask>Document environment configuration in deployment docs</subtask>
+                </subtasks>
+            </task>
+            <task id="5" acs="4">
+                <title>Configure production logging</title>
+                <subtasks>
+                    <subtask>Review existing logging setup in app/config.py</subtask>
+                    <subtask>Ensure structured logging format is used</subtask>
+                    <subtask>Configure log levels: Production INFO, Development DEBUG</subtask>
+                    <subtask>Configure log output: stdout (for containerized deployments)</subtask>
+                    <subtask>Implement structured logging format (JSON if needed): timestamp ISO 8601, log level, endpoint/message, context</subtask>
+                    <subtask>Integrate with Gunicorn logging: access logs and error logs</subtask>
+                    <subtask>Test logging configuration in production-like environment</subtask>
+                    <subtask>Document logging configuration and how to access logs</subtask>
+                </subtasks>
+            </task>
+            <task id="6" acs="5">
+                <title>Implement health check endpoint</title>
+                <subtasks>
+                    <subtask>Review existing health check in app/routes/convert.py or app/__init__.py</subtask>
+                    <subtask>Ensure health check endpoint exists at /health</subtask>
+                    <subtask>Health check should return HTTP 200 when service is ready</subtask>
+                    <subtask>Health check response should be lightweight and fast</subtask>
+                    <subtask>Consider adding readiness vs liveness checks (optional)</subtask>
+                    <subtask>Test health check endpoint: curl http://localhost:5000/health</subtask>
+                    <subtask>Document health check endpoint in deployment docs</subtask>
+                </subtasks>
+            </task>
+            <task id="7" acs="6">
+                <title>Create deployment documentation</title>
+                <subtasks>
+                    <subtask>Create docs/deployment.md or include in README.md</subtask>
+                    <subtask>Document Docker deployment: building image, running container, environment variables, docker-compose usage</subtask>
+                    <subtask>Document Gunicorn deployment: installing Gunicorn, running with config, worker configuration, port binding</subtask>
+                    <subtask>Document environment setup: environment variables list, development vs production configuration, .env file setup</subtask>
+                    <subtask>Document deployment targets: platform-agnostic Docker-based, compatible with AWS ECS, Google Cloud Run, Azure, Railway, Fly.io, Heroku</subtask>
+                    <subtask>Include health check endpoint documentation</subtask>
+                    <subtask>Include monitoring and logging guidance</subtask>
+                    <subtask>Add troubleshooting section for common deployment issues</subtask>
+                </subtasks>
+            </task>
+        </tasks>
+    </story>
+
+    <acceptanceCriteria>
+        <ac id="1">Docker configuration (Dockerfile, docker-compose.yml if needed)</ac>
+        <ac id="2">Production-ready WSGI server configuration (Gunicorn/uWSGI)</ac>
+        <ac id="3">Environment configuration for different deployment stages</ac>
+        <ac id="4">Logging configuration for production (structured logging, log levels)</ac>
+        <ac id="5">Health check endpoint for monitoring</ac>
+        <ac id="6">Basic deployment documentation</ac>
+    </acceptanceCriteria>
+
+    <artifacts>
+        <docs>
+            <doc path="docs/epics.md" title="Epic Breakdown" section="Story 1.10">
+                Story 1.10: Deployment Configuration and Production Readiness - defines requirements for Docker configuration, Gunicorn WSGI server, environment configuration, production logging, health check endpoint, and deployment documentation.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Deployment Architecture">
+                Containerization: Docker container with Python 3.11 base image, Gunicorn as WSGI server, multi-stage build. Production server: Gunicorn with multiple workers (2-4 per CPU core), timeout settings for large file processing. Deployment targets: Platform-agnostic Docker-based, compatible with AWS ECS, Google Cloud Run, Azure Container Instances, Railway, Fly.io, Heroku. Health checks: GET /health endpoint returns 200 OK when service is ready.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Logging Strategy">
+                Structured logging with JSON format. Log levels: DEBUG (development), INFO (production). Include: timestamp, level, endpoint, message, context. Output to stdout for containerized deployments.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Consistency Patterns">
+                Date/Time Format: ISO 8601 format in logs (2025-10-30T14:30:45Z), UTC timezone for all server-side operations.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Project Structure">
+                Dockerfile, docker-compose.yml, gunicorn_config.py, .env.example at project root. Configuration in app/config.py.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Decision Summary">
+                Technology stack: Python 3.11, Flask 3.0.x, Gunicorn (production WSGI server). Deployment: Docker containerization.
+            </doc>
+            <doc path="docs/stories/1-9-documentation-and-api-readiness.md" title="Story 1.9" section="Tasks">
+                Documentation structure established. Include deployment docs in same structure. README exists - update with deployment instructions.
+            </doc>
+            <doc path="docs/stories/1-7-performance-optimization-for-large-files.md" title="Story 1.7" section="Dev Notes">
+                Performance-related configuration may be needed for Gunicorn workers. Performance logging hooks exist - integrate with production logging.
+            </doc>
+            <doc path="docs/stories/1-6-request-size-validation-and-limits.md" title="Story 1.6" section="Tasks">
+                Configuration pattern in app/config.py - extend for deployment environment variables. Environment variable support established - use for deployment configuration.
+            </doc>
+            <doc path="docs/stories/1-1-project-setup-and-flask-application-foundation.md" title="Story 1.1" section="Dev Notes">
+                Flask app factory pattern in app/__init__.py - Gunicorn references app:app. Health check endpoint may already exist - verify and enhance if needed. Basic configuration exists in app/config.py - extend for production.
+            </doc>
+            <doc path="README.md" title="README" section="Configuration, Running the Application">
+                Existing README.md with basic setup instructions, running instructions, configuration section. Needs deployment section with Docker and Gunicorn instructions.
+            </doc>
+        </docs>
+        <code>
+            <artifact path="app/__init__.py" kind="app factory" symbol="create_app" lines="11-32" reason="Flask app factory function. Gunicorn will reference this as app:app. EXISTS, verify reference works correctly">
+                Flask application factory module. Provides create_app() function following Flask app factory pattern. Returns configured Flask app instance. Gunicorn command: gunicorn -c gunicorn_config.py app:app.
+            </artifact>
+            <artifact path="app/config.py" kind="configuration module" symbol="Config" lines="12-31" reason="Configuration class with environment variable support. EXISTS, extend for production deployment configuration (Gunicorn workers, deployment stage settings)">
+                Configuration management module with environment-based configuration. Currently has MAX_FILE_SIZE, LOG_LEVEL, SECRET_KEY. Supports 12-factor app principles. Needs extension for deployment configuration (Gunicorn workers, deployment stages).
+            </artifact>
+            <artifact path="app/routes/convert.py" kind="route handler" symbol="health_check" lines="13-24" reason="Health check endpoint already exists at /health. EXISTS, verify and document in deployment docs">
+                Conversion route handlers with health check endpoint at GET /health. Returns {"status": "healthy"} with HTTP 200. Already implemented and working. Needs documentation in deployment docs.
+            </artifact>
+            <artifact path="requirements.txt" kind="dependencies" symbol="" lines="1-3" reason="Production dependencies file. EXISTS, may need to add Gunicorn if not already included">
+                Production dependencies: Flask>=3.0.0,<4.0.0, lxml>=5.0.0. May need to add Gunicorn if not already in requirements.txt.
+            </artifact>
+        </code>
+        <dependencies>
+            <python>
+                <package name="Flask" version=">=3.0.0,<4.0.0">Web framework. Flask app factory pattern implemented in app/__init__.py</package>
+                <package name="gunicorn" version="Latest">Production WSGI server. Required for production deployment. Install: pip install gunicorn</package>
+                <package name="lxml" version=">=5.0.0">XML parsing library. Already in requirements.txt</package>
+            </python>
+            <infrastructure>
+                <tool name="Docker" version="Latest">Containerization platform. Required for Dockerfile and docker-compose.yml</tool>
+            </infrastructure>
+        </dependencies>
+    </artifacts>
+
+    <constraints>
+        <constraint type="architecture">
+            Follow exact directory structure from Architecture document. Dockerfile, docker-compose.yml, gunicorn_config.py, .env.example at project root. Configuration in app/config.py. Deployment docs in docs/deployment.md or README.md.
+        </constraint>
+        <constraint type="docker">
+            MUST use Python 3.11 base image. Use multi-stage build if optimizing for image size. Add .dockerignore file. Configure Gunicorn as entry point. Expose port 5000 (configurable).
+        </constraint>
+        <constraint type="gunicorn">
+            Gunicorn configuration: bind 0.0.0.0:5000 (configurable), worker class sync, worker processes 2-4 per CPU core, worker timeout 60+ seconds (for large file processing), log level info, enable access and error logging. Reference Flask app as app:app.
+        </constraint>
+        <constraint type="environment">
+            Configuration MUST support different deployment stages: Development (local defaults), Staging (staging env vars), Production (production env vars). Use .env.example for documentation. Follow 12-factor app principles.
+        </constraint>
+        <constraint type="logging">
+            Production logging: structured format (JSON), log level INFO (not DEBUG), output to stdout (for containerized deployments), timestamp ISO 8601, integrate with Gunicorn access/error logs.
+        </constraint>
+        <constraint type="health-check">
+            Health check endpoint MUST exist at GET /health. Returns HTTP 200 when service is ready. Response should be lightweight and fast. Already implemented in app/routes/convert.py - verify and document.
+        </constraint>
+        <constraint type="deployment-targets">
+            Deployment MUST be platform-agnostic (Docker-based). Compatible with: AWS ECS, Google Cloud Run, Azure Container Instances, Railway, Fly.io, Heroku. Document deployment procedures for each platform.
+        </constraint>
+        <constraint type="reuse">
+            REUSE app/__init__.py Flask app factory (don't modify, Gunicorn references it). REUSE app/config.py for configuration (extend, don't replace). REUSE app/routes/convert.py health check endpoint (verify and document). REUSE README.md (update with deployment section).
+        </constraint>
+    </constraints>
+
+    <interfaces>
+        <interface name="create_app" kind="Flask app factory" signature="def create_app(config_name=None) -> Flask" path="app/__init__.py">
+            Flask application factory function. Creates and configures Flask application instance. Returns configured Flask app. Gunicorn references this as app:app (module:function).
+        </interface>
+        <interface name="Config" kind="configuration class" signature="class Config:" path="app/config.py">
+            Configuration class with environment variable support. Loads settings from environment variables with defaults. Follows 12-factor app principles. Needs extension for deployment configuration.
+        </interface>
+        <interface name="GET /health" kind="REST endpoint" signature="GET /health" path="app/routes/convert.py">
+            Health check endpoint. Returns {"status": "healthy"} with HTTP 200. Lightweight and fast. Used by orchestration platforms for container health monitoring.
+        </interface>
+        <interface name="gunicorn" kind="WSGI server command" signature="gunicorn -c gunicorn_config.py app:app" path="command line">
+            Gunicorn command to run Flask application in production. Uses gunicorn_config.py for configuration. References Flask app as app:app (module:function).
+        </interface>
+    </interfaces>
+
+    <tests>
+        <standards>
+            Test Docker build and run locally. Test Gunicorn configuration and startup. Verify health check endpoint works. Test environment variable loading. Verify logging output format in production-like environment.
+        </standards>
+        <locations>
+            Dockerfile (NEW at project root), docker-compose.yml (NEW at project root), gunicorn_config.py (NEW at project root), .env.example (NEW at project root), docs/deployment.md (NEW), README.md (update deployment section)
+        </locations>
+        <ideas>
+            <test ac="1">Test Docker build: docker build -t its-convert-xml . - verify build succeeds without errors</test>
+            <test ac="1">Test Docker run: docker run -p 5000:5000 its-convert-xml - verify container starts and service responds</test>
+            <test ac="1">Test docker-compose: docker-compose up - verify service starts correctly with compose</test>
+            <test ac="2">Test Gunicorn: gunicorn -c gunicorn_config.py app:app - verify server starts and handles requests</test>
+            <test ac="3">Test environment variables: verify app/config.py loads from environment variables correctly for different stages</test>
+            <test ac="4">Test logging: verify structured logging format in production mode, verify log level INFO in production</test>
+            <test ac="5">Test health check: curl http://localhost:5000/health - verify returns 200 with {"status": "healthy"}</test>
+            <test ac="6">Review deployment docs: verify all deployment procedures are documented accurately</test>
+        </ideas>
+    </tests>
+</story-context>
+

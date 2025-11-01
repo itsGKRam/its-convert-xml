@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:ns="http://example.com/namespace" xmlns:app="http://example.com/app">
+  <ns:item id="item-1">First item</ns:item>
+  <ns:item id="item-2">Second item</ns:item>
+  <app:data>
+    <app:value>Data value</app:value>
+    <app:timestamp>2025-01-30T10:30:00Z</app:timestamp>
+  </app:data>
+</root>
+

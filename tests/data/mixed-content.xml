@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    Text before child elements
+    <child>child content</child>
+    More text between elements
+    <child>another child</child>
+    Text after all elements
+</root>
+
+

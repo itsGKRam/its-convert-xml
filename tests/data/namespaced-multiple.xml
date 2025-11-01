@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="http://example.com/ns1" xmlns:ex2="http://example.com/ns2">
+    <child>default namespace from ns1</child>
+    <ex2:child2>prefixed namespace from ns2</ex2:child2>
+    <mixed>
+        <default>default ns</default>
+        <ex2:prefixed>prefixed ns</ex2:prefixed>
+    </mixed>
+</root>
+
+

@@ -1,0 +1,191 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+    <metadata>
+        <epicId>1</epicId>
+        <storyId>1.1</storyId>
+        <title>Project Setup and Flask Application Foundation</title>
+        <status>ready-for-dev</status>
+        <generatedAt>2025-10-30</generatedAt>
+        <generator>BMAD Story Context Workflow</generator>
+        <sourceStoryPath>docs/stories/1-1-project-setup-and-flask-application-foundation.md</sourceStoryPath>
+    </metadata>
+
+    <story>
+        <asA>developer</asA>
+        <iWant>a properly structured Flask project with core application setup</iWant>
+        <soThat>I have a solid foundation for building the conversion API</soThat>
+        <tasks>
+            <task id="1" acs="1,9">
+                <title>Initialize project structure</title>
+                <subtasks>
+                    <subtask>Create project root directory structure matching architecture: app/, tests/, docs/</subtask>
+                    <subtask>Create app/ directory with __init__.py, config.py, exceptions.py</subtask>
+                    <subtask>Create app/routes/ directory with __init__.py and convert.py</subtask>
+                    <subtask>Create app/services/ directory with __init__.py (placeholders for xml_parser.py, json_converter.py)</subtask>
+                    <subtask>Create app/utils/ directory with __init__.py and validators.py</subtask>
+                    <subtask>Create tests/ directory structure: tests/unit/, tests/integration/, tests/performance/</subtask>
+                    <subtask>Create root files: requirements.txt, requirements-dev.txt, pytest.ini, README.md, .gitignore, .env.example</subtask>
+                </subtasks>
+            </task>
+            <task id="2" acs="2">
+                <title>Implement Flask app factory pattern</title>
+                <subtasks>
+                    <subtask>Create app/__init__.py with create_app(config_name=None) function</subtask>
+                    <subtask>Implement app factory that loads configuration and initializes Flask app</subtask>
+                    <subtask>Register blueprints structure (prepare for routes/convert.py)</subtask>
+                    <subtask>Set up basic Flask app initialization with minimal configuration</subtask>
+                </subtasks>
+            </task>
+            <task id="3" acs="3,4,5">
+                <title>Implement configuration management</title>
+                <subtasks>
+                    <subtask>Create app/config.py with configuration class</subtask>
+                    <subtask>Load environment variables with defaults</subtask>
+                    <subtask>Implement MAX_FILE_SIZE setting (default: 300MB = 314572800 bytes)</subtask>
+                    <subtask>Implement LOG_LEVEL setting (default: INFO for production, DEBUG for development)</subtask>
+                    <subtask>Add .env.example file with configuration template</subtask>
+                    <subtask>Document configuration options in code comments</subtask>
+                </subtasks>
+            </task>
+            <task id="4" acs="6,7">
+                <title>Implement health check endpoint</title>
+                <subtasks>
+                    <subtask>Create GET /health route handler in app/routes/convert.py (or create separate health.py if preferred)</subtask>
+                    <subtask>Return JSON response: {"status": "healthy"}</subtask>
+                    <subtask>Ensure route returns HTTP 200 OK status</subtask>
+                    <subtask>Register route with Flask app via blueprint</subtask>
+                </subtasks>
+            </task>
+            <task id="5" acs="8">
+                <title>Create requirements and development setup</title>
+                <subtasks>
+                    <subtask>Create requirements.txt with Flask 3.0.x dependency</subtask>
+                    <subtask>Create requirements-dev.txt with pytest, pytest-cov (optional: black, flake8)</subtask>
+                    <subtask>Create README.md with project overview, virtual environment setup, installation steps, usage example, development setup</subtask>
+                    <subtask>Create pytest.ini with basic pytest configuration</subtask>
+                </subtasks>
+            </task>
+            <task id="6">
+                <title>Testing and validation</title>
+                <subtasks>
+                    <subtask>Write unit test for app factory (tests/unit/test_app.py)</subtask>
+                    <subtask>Write integration test for health check endpoint (tests/integration/test_health.py)</subtask>
+                    <subtask>Verify application starts successfully</subtask>
+                    <subtask>Verify health check endpoint returns correct response</subtask>
+                    <subtask>Verify configuration loads from environment variables</subtask>
+                </subtasks>
+            </task>
+        </tasks>
+    </story>
+
+    <acceptanceCriteria>
+        <ac id="1">Flask application initialized with proper project structure (app/, tests/, requirements.txt, README.md)</ac>
+        <ac id="2">Basic Flask app factory pattern implemented in app/__init__.py</ac>
+        <ac id="3">Configuration management system in place (environment-based config in app/config.py)</ac>
+        <ac id="4">Environment variables supported with sensible defaults</ac>
+        <ac id="5">Configuration includes MAX_FILE_SIZE (300MB), LOG_LEVEL settings</ac>
+        <ac id="6">Application can start and serve a basic health check endpoint at GET /health</ac>
+        <ac id="7">Health check endpoint returns 200 OK with {"status": "healthy"} response</ac>
+        <ac id="8">Python virtual environment setup documented in README</ac>
+        <ac id="9">Project follows structure defined in Architecture document</ac>
+    </acceptanceCriteria>
+
+    <artifacts>
+        <docs>
+            <doc path="docs/PRD.md" title="Product Requirements Document" section="Goals and Background Context">
+        Provides project goals: reliable, production-ready API endpoints for XML conversion with high accuracy and performance. Handles large XML files efficiently (up to 300MB) with clear error messages.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Project Structure">
+        Defines complete project directory structure: app/ with routes/, services/, utils/ subdirectories; tests/ with unit/, integration/, performance/ subdirectories; root configuration files.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Implementation Patterns">
+        Naming conventions: snake_case for files/functions, PascalCase for classes, kebab-case for API routes. Module organization patterns and import structure.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Decision Summary">
+        Technology stack: Python 3.11, Flask 3.0.x, lxml for XML parsing, Gunicorn for production, pytest for testing.
+            </doc>
+            <doc path="docs/epic-1-context.md" title="Epic 1 Technical Specification" section="Detailed Design">
+        Services and modules: app/__init__.py (Flask app factory), app/config.py (configuration management), app/routes/convert.py (route handlers).
+            </doc>
+            <doc path="docs/epic-1-context.md" title="Epic 1 Technical Specification" section="Dependencies and Integrations">
+        Runtime dependencies: Python 3.11, Flask 3.0.x, lxml, Gunicorn. Development: pytest, pytest-cov. Standard library: json, logging, os, sys.
+            </doc>
+            <doc path="docs/epics.md" title="Epic Breakdown" section="Story 1.1">
+        Story 1.1 user story, acceptance criteria, and prerequisites (None - first story in epic).
+            </doc>
+        </docs>
+        <code>
+            <!-- No existing code artifacts - this is the first story establishing project foundation -->
+        </code>
+        <dependencies>
+            <ecosystem name="python">
+                <package name="Flask" version="3.0.x" purpose="Web framework for API endpoints" />
+                <package name="lxml" version="latest" purpose="XML parsing and validation (will be used in later stories)" />
+                <package name="Gunicorn" version="latest" purpose="Production WSGI server (deployment story)" />
+            </ecosystem>
+            <ecosystem name="python-dev">
+                <package name="pytest" version="latest" purpose="Testing framework" />
+                <package name="pytest-cov" version="latest" purpose="Test coverage reporting (optional)" />
+                <package name="black" version="latest" purpose="Code formatting (optional)" />
+                <package name="flake8" version="latest" purpose="Linting (optional)" />
+            </ecosystem>
+            <ecosystem name="python-stdlib">
+                <module name="json" purpose="JSON serialization" />
+                <module name="logging" purpose="Structured logging" />
+                <module name="os" purpose="System/environment access" />
+                <module name="sys" purpose="System/environment access" />
+            </ecosystem>
+        </dependencies>
+    </artifacts>
+
+    <constraints>
+        <constraint type="structure">
+      Follow exact directory structure from Architecture document: app/, app/routes/, app/services/, app/utils/, tests/unit/, tests/integration/, tests/performance/
+        </constraint>
+        <constraint type="naming">
+      Files: snake_case (config.py, xml_parser.py). Classes: PascalCase (Config, XMLParser). Functions/Variables: snake_case. API Routes: kebab-case (/health)
+        </constraint>
+        <constraint type="pattern">
+      Flask app factory pattern in app/__init__.py using create_app() function. Configuration loaded from environment variables with defaults.
+        </constraint>
+        <constraint type="testing">
+      Use pytest framework. Unit tests in tests/unit/, integration tests in tests/integration/. Test coverage target: &gt; 80% for core logic.
+        </constraint>
+        <constraint type="configuration">
+      Environment-based configuration following 12-factor app principles. MAX_FILE_SIZE default: 300MB (314572800 bytes). LOG_LEVEL default: INFO for production, DEBUG for development.
+        </constraint>
+        <constraint type="runtime">
+      Python 3.11 runtime environment required. Flask 3.0.x web framework.
+        </constraint>
+    </constraints>
+
+    <interfaces>
+        <interface name="GET /health" kind="REST endpoint" signature="GET /health → 200 OK, Content-Type: application/json, Body: {\"status\": \"healthy\"}" path="app/routes/convert.py">
+      Health check endpoint for monitoring and orchestration platforms (Kubernetes, ECS, etc.). Returns simple JSON status response.
+        </interface>
+        <interface name="create_app" kind="function signature" signature="def create_app(config_name=None) -> Flask" path="app/__init__.py">
+      Flask app factory function that initializes Flask application instance, loads configuration, registers blueprints, and returns app instance.
+        </interface>
+        <interface name="Config" kind="class" signature="class Config: MAX_FILE_SIZE, LOG_LEVEL, ..." path="app/config.py">
+      Configuration class that loads settings from environment variables with sensible defaults.
+        </interface>
+    </interfaces>
+
+    <tests>
+        <standards>
+      Use pytest framework for all testing. Unit tests in tests/unit/ for core functions. Integration tests in tests/integration/ for endpoints. Test organization mirrors source structure. Test coverage target: &gt; 80% for core conversion logic. Use Flask test client for integration testing.
+        </standards>
+        <locations>
+            <location>tests/unit/</location>
+            <location>tests/integration/</location>
+            <location>tests/performance/</location>
+        </locations>
+        <ideas>
+            <idea ac="1,9">Test project structure exists: verify all required directories and files are created in correct locations</idea>
+            <idea ac="2">Test app factory: verify create_app() returns Flask instance, app initializes successfully, blueprints registered</idea>
+            <idea ac="3,4,5">Test configuration: verify Config loads from environment variables, defaults applied when env vars missing, MAX_FILE_SIZE and LOG_LEVEL settings accessible</idea>
+            <idea ac="6,7">Test health endpoint: verify GET /health returns 200 OK, Content-Type is application/json, response body is {"status": "healthy"}</idea>
+            <idea ac="8">Test README: verify virtual environment setup instructions are present and clear</idea>
+        </ideas>
+    </tests>
+</story-context>
+

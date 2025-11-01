@@ -1,0 +1,26 @@
+{
+  "catalog": {
+    "book": [
+      {
+        "title": "Python Programming",
+        "author": {
+          "name": "John Doe",
+          "email": "john@example.com",
+          "bio": "Software engineer with 10 years of experience"
+        },
+        "price": 29.99,
+        "isbn": "978-0-123456-78-9"
+      },
+      {
+        "title": "Flask Web Development",
+        "author": {
+          "name": "Jane Smith",
+          "email": "jane@example.com"
+        },
+        "price": 39.99,
+        "isbn": "978-0-987654-32-1"
+      }
+    ]
+  }
+}
+

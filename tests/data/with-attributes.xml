@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root id="1" type="test" enabled="true">
+    <item id="item1" category="A">value1</item>
+    <item id="item2" category="B">value2</item>
+    <empty attr="only" />
+</root>
+
+

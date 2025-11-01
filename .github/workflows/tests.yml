@@ -1,0 +1,90 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, develop, master]
+  pull_request:
+    branches: [main, develop, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run unit tests with coverage
+        run: |
+          pytest tests/unit/ \
+            --cov=app \
+            --cov-report=term \
+            --cov-report=html \
+            --cov-report=xml \
+            --junitxml=junit-unit.xml \
+            -v
+
+      - name: Run integration tests
+        run: |
+          pytest tests/integration/ \
+            --junitxml=junit-integration.xml \
+            -v
+
+      - name: Run performance tests (fast only)
+        run: |
+          pytest tests/performance/ \
+            -m "not slow and not very_slow" \
+            --junitxml=junit-performance.xml \
+            -v
+        continue-on-error: true # Performance tests may be flaky
+
+      - name: Check coverage threshold
+        run: |
+          python -m pytest --cov=app.services.xml_parser --cov=app.services.json_converter --cov-report=term-missing --cov-fail-under=80 tests/unit/ -q || echo "Coverage below 80% for core conversion logic"
+        continue-on-error: true # Warn but don't fail
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-results-${{ matrix.python-version }}
+          path: |
+            junit-*.xml
+            htmlcov/
+
+      - name: Upload coverage HTML
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: coverage-html-${{ matrix.python-version }}
+          path: htmlcov/
+

@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+	<env:Body>
+		<wd:Get_Job_Requisitions_Response xmlns:wd="urn:com.workday/bsvc" wd:version="v43.0">
+			<wd:Response_Filter>
+				<wd:As_Of_Effective_Date>2025-10-07</wd:As_Of_Effective_Date>
+				<wd:Page>1</wd:Page>
+				<wd:Count>499</wd:Count>
+			</wd:Response_Filter>
+			<wd:Response_Group>
+				<wd:Include_Reference>1</wd:Include_Reference>
+				<wd:Include_Job_Requisition_Definition_Data>1</wd:Include_Job_Requisition_Definition_Data>
+				<wd:Include_Job_Requisition_Restrictions_Data>1</wd:Include_Job_Requisition_Restrictions_Data>
+				<wd:Include_Qualifications>1</wd:Include_Qualifications>
+				<wd:Include_Job_Requisition_Attachments>1</wd:Include_Job_Requisition_Attachments>
+				<wd:Include_Organizations>1</wd:Include_Organizations>
+				<wd:Include_Roles>1</wd:Include_Roles>
+			</wd:Response_Group>
+			<wd:Response_Results>
+				<wd:Total_Results>754</wd:Total_Results>
+				<wd:Total_Pages>2</wd:Total_Pages>
+				<wd:Page_Results>499</wd:Page_Results>
+				<wd:Page>1</wd:Page>
+			</wd:Response_Results>
+			<wd:Response_Data>
+				<wd:Job_Requisition>
+					<wd:Job_Requisition_Reference wd:Descriptor="R-00001 Operations Business Analyst (Filled)">
+						<wd:ID wd:type="WID">e369e59b86d4470a8861928e2a3d22d2</wd:ID>
+						<wd:ID wd:type="Job_Requisition_ID">R-00001</wd:ID>
+					</wd:Job_Requisition_Reference>
+					<wd:Job_Requisition_Data>
+						<wd:Job_Requisition_Status_Reference wd:Descriptor="Filled">
+							<wd:ID wd:type="WID">232c295da09343aea44be6eb390d719f</wd:ID>
+							<wd:ID wd:type="Job_Requisition_Status_ID">FILLED</wd:ID>
+						</wd:Job_Requisition_Status_Reference>
+						<wd:Job_Requisition_Detail_Data>
+							<wd:Job_Posting_Title>Operations Business Analyst</wd:Job_Posting_Title>
+							<wd:Positions_Allocated>1</wd:Positions_Allocated>
+							<wd:Positions_Available>0</wd:Positions_Available>
+							<wd:Academic_Tenure_Eligible>0</wd:Academic_Tenure_Eligible>
+							<wd:Job_Description_Summary>A Business Analyst's responsibility is to help drive projects and bring value through operations. To do this, they identify, distinguish and analyze multiple components of a problem and then make conclusions using high-level quantitative skills. Common responsibilities include strategic operations analysis, identifying performance trends, scanning business/industry trends, reviewing  sales/financial analysis and interpreting data. Individuals in this position work with a variety of people across the company to perform their job; and therefore, successful Business Analysts have strong skills in communication.</wd:Job_Description_Summary>
+							<wd:Justification>This will help accomplish our strategic goals of maximizing efficiency in our organization.</wd:Justification>
+							<wd:Recruiting_Instruction_Data>
+								<wd:Recruiting_Instruction_Reference wd:Descriptor="Post Internally and Externally">
+									<wd:ID wd:type="WID">579035cfc6ae4e9885e41f1aafe8e564</wd:ID>
+									<wd:ID wd:type="Recruiting_Instruction_ID">Post_Internally_and_Externally</wd:ID>
+								</wd:Recruiting_Instruction_Reference>
+								<wd:Do_Not_Send_To_Recruiting_System>0</wd:Do_Not_Send_To_Recruiting_System>
+								<wd:Name>Post Internally and Externally</wd:Name>
+							</wd:Recruiting_Instruction_Data>
+							<wd:Available_for_Recruiting>1</wd:Available_for_Recruiting>
+							<wd:Confidential_Job_Requisition>0</wd:Confidential_Job_Requisition>
+							<wd:Job_Application_Template_Reference wd:Descriptor="Job Application Default Template">
+								<wd:ID wd:type="WID">b5e0d3784fb20199ca567ba24a202100</wd:ID>
+								<wd:ID wd:type="Job_Application_Template_Reference_ID">JOB_APPLICATION_TEMPLATE-6-1</wd:ID>
+							</wd:Job_Application_Template_Reference>
+						</wd:Job_Requisition_Detail_Data>
+						<wd:Hiring_Requirement_Data>
+							<wd:Recruiting_Start_Date>2011-01-01</wd:Recruiting_Start_Date>
+							<wd:Target_Hire_Date>2011-02-14</wd:Target_Hire_Date>
+							<wd:Job_Profile_Reference wd:Descriptor="Business Analyst">
+								<wd:ID wd:type="WID">1a769e882ecb4dc1b38d791ce796ff8a</wd:ID>
+								<wd:ID wd:type="Job_Profile_ID">37130</wd:ID>
+							</wd:Job_Profile_Reference>
+							<wd:Worker_Type_Reference wd:Descriptor="Contingent Worker">
+								<wd:ID wd:type="WID">d588c334446c11de98360015c5e6daf6</wd:ID>
+								<wd:ID wd:type="Worker_Type_ID">CW</wd:ID>
+							</wd:Worker_Type_Reference>
+							<wd:Position_Worker_Type_Reference wd:Descriptor="Consultant">
+								<wd:ID wd:type="WID">1c845b5bf0af4dacbb858f21f4999874</wd:ID>
+								<wd:ID wd:type="Contingent_Worker_Type_ID">Consultant</wd:ID>
+							</wd:Position_Worker_Type_Reference>
+							<wd:Primary_Location_Reference wd:Descriptor="San Francisco">
+								<wd:ID wd:type="WID">d13a7c46a06443c4a33c09afbdf72c73</wd:ID>
+								<wd:ID wd:type="Location_ID">San_Francisco_site</wd:ID>
+							</wd:Primary_Location_Reference>
+							<wd:Primary_Job_Posting_Location_Reference wd:Descriptor="San Francisco">
+								<wd:ID wd:type="WID">d13a7c46a06443c4a33c09afbdf72c73</wd:ID>
+								<wd:ID wd:type="Location_ID">San_Francisco_site</wd:ID>
+							</wd:Primary_Job_Posting_Location_Reference>
+							<wd:Time_Type_Reference wd:Descriptor="Full time">
+								<wd:ID wd:type="WID">900fa8d9ae6f45a0a788545a85878f40</wd:ID>
+								<wd:ID wd:type="Position_Time_Type_ID">Full_time</wd:ID>
+							</wd:Time_Type_Reference>
+							<wd:Scheduled_Weekly_Hours>40</wd:Scheduled_Weekly_Hours>
+							<wd:Spotlight_Job>0</wd:Spotlight_Job>
+						</wd:Hiring_Requirement_Data>
+						<wd:Qualification_Data>
+							<wd:Competency_Data>
+								<wd:Competency_Profile_Reference wd:Descriptor="Domain Expertise (Proficient)">
+									<wd:ID wd:type="WID">b29e4f81651749ff9753b15ad588d1a4</wd:ID>
+								</wd:Competency_Profile_Reference>
+								<wd:Competency_Profile_Data>
+									<wd:Competency_Reference wd:Descriptor="Domain Expertise">
+										<wd:ID wd:type="WID">11f2627438234d90a3d409dbda78546b</wd:ID>
+										<wd:ID wd:type="Competency_ID">Domain_Expertise</wd:ID>
+									</wd:Competency_Reference>
+									<wd:Proficiency_Rating_Reference wd:Descriptor="Proficient">
+										<wd:ID wd:type="WID">127cd826dee048489e4a0d564f0a9784</wd:ID>
+										<wd:ID wd:type="Proficiency_Rating_ID">Proficient</wd:ID>
+									</wd:Proficiency_Rating_Reference>
+									<wd:Required>0</wd:Required>
+									<wd:Qualification_Source_Reference wd:Descriptor="5302$522:  R-00001 Operations Business Analyst (Filled)">
+										<wd:ID wd:type="WID">950e112b976143bca040a39006d9cedd</wd:ID>
+									</wd:Qualification_Source_Reference>
+								</wd:Competency_Profile_Data>
+							</wd:Competency_Data>
+						</wd:Qualification_Data>
+						<wd:Position_Data>
+							<wd:Position_Reference wd:Descriptor="Operations Business Analyst (Unfilled)">
+								<wd:ID wd:type="WID">2cf4a58de7774c9b8d91efac78f054d7</wd:ID>
+								<wd:ID wd:type="Position_ID">P-00297</wd:ID>
+							</wd:Position_Reference>
+						</wd:Position_Data>
+						<wd:Supervisory_Organization_Reference wd:Descriptor="Global Support Center">
+							<wd:ID wd:type="WID">699271b201664da7bd21db29b9ef85a6</wd:ID>
+							<wd:ID wd:type="Organization_Reference_ID">Global_Support_Center_supervisory</wd:ID>
+						</wd:Supervisory_Organization_Reference>
+					</wd:Job_Requisition_Data>
+				</wd:Job_Requisition>
+
+			</wd:Response_Data>
+		</wd:Get_Job_Requisitions_Response>
+	</env:Body>
+</env:Envelope>

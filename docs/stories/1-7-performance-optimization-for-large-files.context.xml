@@ -1,0 +1,196 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+    <metadata>
+        <epicId>1</epicId>
+        <storyId>1.7</storyId>
+        <title>Performance Optimization for Large Files</title>
+        <status>drafted</status>
+        <generatedAt>2025-10-30</generatedAt>
+        <generator>BMAD Story Context Workflow</generator>
+        <sourceStoryPath>docs/stories/1-7-performance-optimization-for-large-files.md</sourceStoryPath>
+    </metadata>
+
+    <story>
+        <asA>API consumer</asA>
+        <iWant>the API to handle large XML files (up to 300MB) efficiently</iWant>
+        <soThat>I can process large datasets without timeouts or memory issues</soThat>
+        <tasks>
+            <task id="1" acs="1,2">
+                <title>Implement streaming XML parsing for large files</title>
+                <subtasks>
+                    <subtask>Research lxml streaming capabilities: iterparse() method for memory-efficient parsing</subtask>
+                    <subtask>Update app/services/xml_parser.py to support streaming parsing mode</subtask>
+                    <subtask>Implement parse_xml_streaming() function using lxml.etree.iterparse()</subtask>
+                    <subtask>Handle XML namespaces in streaming mode</subtask>
+                    <subtask>Ensure streaming parser validates XML structure during parsing</subtask>
+                    <subtask>Update app/services/json_converter.py to work with streaming parser output</subtask>
+                    <subtask>Implement memory-efficient conversion approach (process elements incrementally)</subtask>
+                    <subtask>Document streaming vs. non-streaming usage patterns</subtask>
+                </subtasks>
+            </task>
+            <task id="2" acs="2,4">
+                <title>Optimize conversion engine for memory efficiency</title>
+                <subtasks>
+                    <subtask>Review current conversion implementation in app/services/json_converter.py</subtask>
+                    <subtask>Refactor to use incremental processing where possible</subtask>
+                    <subtask>Avoid loading entire XML tree into memory for large files</subtask>
+                    <subtask>Implement generator pattern for large JSON structure assembly if needed</subtask>
+                    <subtask>Profile memory usage during conversion process</subtask>
+                    <subtask>Ensure memory usage stays within acceptable limits</subtask>
+                    <subtask>Add memory usage logging/measurement hooks</subtask>
+                </subtasks>
+            </task>
+            <task id="3" acs="6">
+                <title>Implement performance monitoring and logging</title>
+                <subtasks>
+                    <subtask>Add performance logging hooks in app/routes/convert.py</subtask>
+                    <subtask>Log request processing time (start, end timestamps)</subtask>
+                    <subtask>Log file size processed</subtask>
+                    <subtask>Log memory usage before/after processing (if measurable)</subtask>
+                    <subtask>Use structured logging format</subtask>
+                    <subtask>Include performance metrics in response headers or logs (optional)</subtask>
+                    <subtask>Ensure performance tracking doesn't significantly impact response time</subtask>
+                </subtasks>
+            </task>
+            <task id="4" acs="3">
+                <title>Establish performance baseline and documentation</title>
+                <subtasks>
+                    <subtask>Document performance target: < 30 seconds for 300MB files</subtask>
+                    <subtask>Create performance baseline documentation in docs/performance-baseline.md or similar</subtask>
+                    <subtask>Document expected performance characteristics for different file sizes</subtask>
+                    <subtask>Include performance considerations in README.md</subtask>
+                    <subtask>Document streaming parser usage and when to use it vs. standard parsing</subtask>
+                </subtasks>
+            </task>
+            <task id="5" acs="5">
+                <title>Create performance test suite</title>
+                <subtasks>
+                    <subtask>Create tests/performance/test_large_files.py test file</subtask>
+                    <subtask>Generate or use test fixtures for various file sizes: 1MB, 10MB, 100MB, 300MB</subtask>
+                    <subtask>Test response time for each file size</subtask>
+                    <subtask>Verify response time < 30 seconds for 300MB files</subtask>
+                    <subtask>Measure and report memory usage during tests (if possible)</subtask>
+                    <subtask>Test streaming parser performance vs. standard parser for large files</subtask>
+                    <subtask>Document performance test results and baseline metrics</subtask>
+                    <subtask>Ensure performance tests don't fail CI/CD pipeline (may run separately)</subtask>
+                </subtasks>
+            </task>
+        </tasks>
+    </story>
+
+    <acceptanceCriteria>
+        <ac id="1">Streaming or chunked processing implemented for XML parsing (if applicable)</ac>
+        <ac id="2">Memory-efficient conversion approach for large files</ac>
+        <ac id="3">Response time target: < 30 seconds for 300MB files (documented performance baseline)</ac>
+        <ac id="4">Memory usage stays within acceptable limits during processing</ac>
+        <ac id="5">Performance tests with various file sizes (1MB, 10MB, 100MB, 300MB)</ac>
+        <ac id="6">Monitoring/logging hooks in place for performance tracking</ac>
+    </acceptanceCriteria>
+
+    <artifacts>
+        <docs>
+            <doc path="docs/epics.md" title="Epic Breakdown" section="Story 1.7">
+                Story 1.7: Performance Optimization for Large Files - defines requirements for streaming processing, memory efficiency, < 30 second response time for 300MB files, and performance testing.
+            </doc>
+            <doc path="docs/PRD.md" title="Product Requirements Document" section="FR008, NFR001">
+                FR008: API must handle large XML files (up to 300MB) without excessive memory usage. NFR001: API must process all XML conversions within acceptable response times (target: < 30 seconds for 300MB files).
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Technology Stack Details">
+                lxml library for XML parsing. Use lxml iterparse() for large files instead of loading entire tree. Streaming XML parsing to minimize memory footprint.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Performance Considerations">
+                Target performance: < 30 seconds for 300MB files. Optimization strategies: streaming XML parsing, memory-efficient conversion, Gunicorn workers. Performance testing with file sizes: 1MB, 10MB, 100MB, 300MB.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Logging Strategy">
+                Structured logging with JSON format. Log levels: DEBUG (development), INFO (production). Include: timestamp, level, endpoint, message, context.
+            </doc>
+            <doc path="docs/epic-1-context.md" title="Epic 1 Context" section="Performance Requirements">
+                Use lxml iterparse() for large files (>10MB) to enable streaming XML parsing. Memory-efficient conversion algorithms. Baseline performance testing with file sizes: 1MB, 10MB, 100MB, 300MB.
+            </doc>
+            <doc path="docs/stories/1-6-request-size-validation-and-limits.md" title="Story 1.6" section="Dev Notes">
+                Request size validation occurs early in request pipeline. Performance optimization should work with existing size validation.
+            </doc>
+            <doc path="docs/stories/1-3-xml-to-json-conversion-engine.md" title="Story 1.3" section="Dev Notes">
+                JSON converter service implementation and patterns. Service functions return data structures (Dict), not Flask responses.
+            </doc>
+            <doc path="docs/stories/1-2-xml-parsing-and-validation-core.md" title="Story 1.2" section="Dev Notes">
+                XML parser service implementation. Handles namespaces correctly. Security settings prevent XML attack vectors.
+            </doc>
+        </docs>
+        <code>
+            <artifact path="app/services/xml_parser.py" kind="service module" symbol="parse_xml" lines="14-64" reason="Current XML parser uses etree.fromstring() which loads entire tree. Need to add parse_xml_streaming() using iterparse() for memory-efficient streaming parsing">
+                XML parsing service using lxml with security settings. Current parse_xml() function loads entire XML tree. Needs streaming variant using lxml.etree.iterparse() for large files.
+            </artifact>
+            <artifact path="app/services/json_converter.py" kind="service module" symbol="convert_xml_to_json" lines="16-45" reason="JSON converter takes parsed XML element tree. Needs optimization to work with streaming parser and process incrementally for memory efficiency">
+                XML-to-JSON conversion service. Converts parsed XML element tree to JSON dict. Currently processes entire tree in memory. Needs optimization for incremental processing with streaming parser.
+            </artifact>
+            <artifact path="app/routes/convert.py" kind="route handler" symbol="convert_bp" lines="1-26" reason="Route handler where performance logging hooks need to be added. Currently only has health check endpoint">
+                Conversion route handlers blueprint. Performance logging hooks need to be added here to track request processing time, file size, and memory usage.
+            </artifact>
+            <artifact path="app/config.py" kind="configuration module" symbol="Config" lines="12-31" reason="Configuration management. May need performance-related config options (streaming threshold, etc.)">
+                Configuration class with environment variable support. May need to add performance configuration options like streaming threshold.
+            </artifact>
+        </code>
+        <dependencies>
+            <python>
+                <package name="Flask" version=">=3.0.0,<4.0.0">Web framework for route handlers and request handling</package>
+                <package name="lxml" version=">=5.0.0">XML parsing library. Provides iterparse() method for streaming XML parsing. Version >=5.0.0 required</package>
+            </python>
+        </dependencies>
+    </artifacts>
+
+    <constraints>
+        <constraint type="architecture">
+            Follow exact directory structure from Architecture document. XML parser in app/services/xml_parser.py. JSON converter in app/services/json_converter.py. Route handler in app/routes/convert.py. Performance tests in tests/performance/.
+        </constraint>
+        <constraint type="performance">
+            Response time target: < 30 seconds for 300MB files. Memory usage must stay within acceptable limits. Use streaming parsing for large files to minimize memory footprint. Performance tracking must not significantly impact response time.
+        </constraint>
+        <constraint type="technology">
+            MUST use lxml iterparse() for streaming XML parsing. lxml library already in requirements. Maintain namespace support in streaming mode. Ensure streaming parser validates XML structure during parsing.
+        </constraint>
+        <constraint type="service-interface">
+            Service functions return data structures (Dict), not Flask responses. Maintain this pattern. Streaming parser should integrate seamlessly with existing service interfaces.
+        </constraint>
+        <constraint type="testing">
+            Use pytest framework. Performance tests in tests/performance/ directory. Test with various file sizes: 1MB, 10MB, 100MB, 300MB. Performance tests may be marked as slow/integration tests. Consider running separately from unit/integration tests in CI/CD.
+        </constraint>
+        <constraint type="logging">
+            Use structured logging format (JSON). Include performance metrics: request processing time, file size, memory usage. Log level: INFO for production, DEBUG for development.
+        </constraint>
+        <constraint type="reuse">
+            REUSE app/services/xml_parser.py for adding streaming parser (don't replace existing parse_xml). REUSE app/services/json_converter.py for optimization (maintain existing interface). REUSE app/routes/convert.py route handler structure. REUSE app/config.py for configuration management.
+        </constraint>
+    </constraints>
+
+    <interfaces>
+        <interface name="parse_xml_streaming" kind="function signature" signature="def parse_xml_streaming(xml_string: str) -> Iterator[etree._Element] or Generator" path="app/services/xml_parser.py">
+            Streaming XML parser function using lxml.etree.iterparse(). Yields elements as they are parsed, enabling incremental processing without loading entire tree into memory. Handles namespaces and validates XML structure during parsing.
+        </interface>
+        <interface name="convert_xml_to_json" kind="function signature" signature="def convert_xml_to_json(xml_root: etree._Element) -> Dict[str, Any]" path="app/services/json_converter.py">
+            JSON converter function to optimize. Currently takes entire parsed XML tree. May need variant that works with streaming parser output for incremental conversion. Maintains existing interface for backward compatibility.
+        </interface>
+        <interface name="convert_bp.route" kind="Flask route decorator" signature="@convert_bp.route('/convert/xml-to-json', methods=['POST'])" path="app/routes/convert.py">
+            Flask blueprint route where performance logging hooks need to be added. Log request processing time, file size, and memory usage using structured logging format.
+        </interface>
+    </interfaces>
+
+    <tests>
+        <standards>
+            Use pytest framework for all testing. Performance tests in tests/performance/ directory. Test organization mirrors source structure. Performance tests may be marked with pytest markers (@pytest.mark.slow, @pytest.mark.integration). Consider running performance tests separately from unit/integration tests in CI/CD pipeline.
+        </standards>
+        <locations>
+            tests/performance/test_large_files.py (new file for performance test suite)
+        </locations>
+        <ideas>
+            <test ac="1,2">Test streaming parser: create large XML file (>10MB), use parse_xml_streaming(), verify elements processed incrementally without loading entire tree</test>
+            <test ac="2,4">Test memory efficiency: profile memory usage during conversion of large files, verify memory stays within acceptable limits</test>
+            <test ac="3">Test response time: create 300MB XML file, measure conversion time, verify < 30 seconds</test>
+            <test ac="3,5">Test performance across file sizes: test with 1MB, 10MB, 100MB, 300MB files, measure and document response times</test>
+            <test ac="5">Test performance baseline: establish baseline metrics for each file size, document in test results</test>
+            <test ac="6">Test performance logging: verify performance metrics logged (processing time, file size, memory usage)</test>
+            <test ac="1,2">Compare streaming vs standard parser: test performance and memory usage differences for large files</test>
+            <test ac="4">Test memory limits: verify memory usage doesn't exceed acceptable limits during processing of large files</test>
+        </ideas>
+    </tests>
+</story-context>
+

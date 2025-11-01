@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <text>Text with &amp; entities: &lt;tags&gt; and &quot;quotes&quot;</text>
+    <unicode>Unicode characters: 你好 世界 🌍</unicode>
+    <mixed>Mixed: &amp; &lt; &gt; &quot; &apos; plus unicode: 测试</mixed>
+    <numbers>123 &amp; 456 &lt; 789</numbers>
+</root>
+
+

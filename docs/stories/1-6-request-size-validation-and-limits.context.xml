@@ -1,0 +1,179 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+    <metadata>
+        <epicId>1</epicId>
+        <storyId>1.6</storyId>
+        <title>Request Size Validation and Limits</title>
+        <status>drafted</status>
+        <generatedAt>2025-10-30</generatedAt>
+        <generator>BMAD Story Context Workflow</generator>
+        <sourceStoryPath>docs/stories/1-6-request-size-validation-and-limits.md</sourceStoryPath>
+    </metadata>
+
+    <story>
+        <asA>API operator</asA>
+        <iWant>request size limits enforced to prevent abuse and resource exhaustion</iWant>
+        <soThat>the service remains stable and performant</soThat>
+        <tasks>
+            <task id="1" acs="1,2">
+                <title>Implement request size validation utility</title>
+                <subtasks>
+                    <subtask>Create validate_request_size() function in app/utils/validators.py</subtask>
+                    <subtask>Check Content-Length header if present and compare against 300MB limit</subtask>
+                    <subtask>If Content-Length exceeds limit, reject immediately without reading body</subtask>
+                    <subtask>If Content-Length not present, read request body stream and check size</subtask>
+                    <subtask>Handle case where request body size exceeds limit during streaming read</subtask>
+                    <subtask>Return appropriate error indication (exception or status code) when limit exceeded</subtask>
+                    <subtask>Ensure validation happens before XML parsing to save resources</subtask>
+                </subtasks>
+            </task>
+            <task id="2" acs="5">
+                <title>Add configurable size limit</title>
+                <subtasks>
+                    <subtask>Add MAX_REQUEST_SIZE configuration in app/config.py</subtask>
+                    <subtask>Default value: 300MB (314572800 bytes)</subtask>
+                    <subtask>Support environment variable override (e.g., MAX_REQUEST_SIZE_BYTES)</subtask>
+                    <subtask>Import configuration in app/utils/validators.py and use in validation function</subtask>
+                    <subtask>Document configuration option in README.md or config documentation</subtask>
+                </subtasks>
+            </task>
+            <task id="3" acs="3">
+                <title>Integrate size validation into endpoint</title>
+                <subtasks>
+                    <subtask>Import validate_request_size() into app/routes/convert.py</subtask>
+                    <subtask>Call validation function early in route handler (before parsing)</subtask>
+                    <subtask>Catch size limit exceeded error/exception</subtask>
+                    <subtask>Return HTTP 413 (Payload Too Large) response</subtask>
+                    <subtask>Use structured error response format: {error: {code: "FILE_SIZE_EXCEEDED", message: "...", details: "..."}}</subtask>
+                    <subtask>Include clear error message indicating 300MB limit exceeded</subtask>
+                    <subtask>Ensure error handling follows architecture patterns</subtask>
+                </subtasks>
+            </task>
+            <task id="4" acs="6">
+                <title>Write comprehensive size validation tests</title>
+                <subtasks>
+                    <subtask>Update tests/integration/test_error_handling.py or create tests/unit/test_validators.py</subtask>
+                    <subtask>Test Content-Length header validation: request with Content-Length > 300MB returns 413 before body read</subtask>
+                    <subtask>Test request body size validation: request body > 300MB returns 413</subtask>
+                    <subtask>Test requests at limit boundary: 300MB exactly should pass, 300MB+1 byte should fail</subtask>
+                    <subtask>Test error message includes size limit information</subtask>
+                    <subtask>Test error response format matches structured error format</subtask>
+                    <subtask>Test error code is "FILE_SIZE_EXCEEDED"</subtask>
+                    <subtask>Test validation occurs before XML parsing (performance optimization)</subtask>
+                    <subtask>Test configuration override via environment variable (if time permits)</subtask>
+                    <subtask>Ensure all size validation paths are covered</subtask>
+                </subtasks>
+            </task>
+        </tasks>
+    </story>
+
+    <acceptanceCriteria>
+        <ac id="1">Request size validation checks Content-Length header or body size before processing</ac>
+        <ac id="2">300MB maximum file size limit enforced</ac>
+        <ac id="3">Requests exceeding limit rejected early (before parsing) with HTTP 413</ac>
+        <ac id="4">Clear error message indicating size limit exceeded</ac>
+        <ac id="5">Configuration allows adjustment of size limit if needed</ac>
+        <ac id="6">Tests verify size limit enforcement</ac>
+    </acceptanceCriteria>
+
+    <artifacts>
+        <docs>
+            <doc path="docs/epics.md" title="Epic Breakdown" section="Story 1.6">
+                Story 1.6: Request Size Validation and Limits - defines acceptance criteria for 300MB size limit enforcement, early rejection with HTTP 413, and configurable limits.
+            </doc>
+            <doc path="docs/PRD.md" title="Product Requirements Document" section="FR011, NFR004">
+                FR011: API must implement request size limits to prevent abuse. NFR004: API must support processing XML files up to 300MB in size.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Error Response Format">
+                Consistent JSON error structure: {error: {code, message, details}}. Error code FILE_SIZE_EXCEEDED defined for size limit errors. HTTP 413 status code for payload too large.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Configuration">
+                Environment variables for all configuration following 12-factor app approach. Configuration loaded in app/config.py with sensible defaults.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Project Structure">
+                Validation utilities in app/utils/validators.py. Configuration in app/config.py. Route handlers in app/routes/convert.py.
+            </doc>
+            <doc path="docs/stories/1-5-error-handling-and-structured-error-responses.md" title="Story 1.5" section="Dev Notes">
+                Error response format and HTTP 413 status code patterns established. Error handling pattern: route handlers catch exceptions and convert to structured JSON error responses.
+            </doc>
+            <doc path="docs/stories/1-4-post-endpoint-for-xml-to-json.md" title="Story 1.4" section="Dev Notes">
+                Route handler location and request body access patterns. Flask request.data or request.get_data() used to read body.
+            </doc>
+        </docs>
+        <code>
+            <artifact path="app/utils/validators.py" kind="utility module" symbol="" lines="1-6" reason="Location for validate_request_size() function - currently has placeholder, needs implementation">
+                Validation utilities module. Contains placeholder for request validation functions.
+            </artifact>
+            <artifact path="app/config.py" kind="configuration module" symbol="Config.MAX_FILE_SIZE" lines="20-21" reason="Configuration class with MAX_FILE_SIZE already defined (314572800 bytes). May need to add MAX_REQUEST_SIZE or reuse MAX_FILE_SIZE">
+                Configuration management with MAX_FILE_SIZE already defined as 314572800 bytes (300MB). Environment variable support via MAX_FILE_SIZE env var.
+            </artifact>
+            <artifact path="app/routes/convert.py" kind="route handler" symbol="convert_bp" lines="1-26" reason="Route handler blueprint where size validation must be integrated. Currently only has health check endpoint">
+                Conversion route handlers blueprint. Contains health check endpoint. Will need to add XML-to-JSON endpoint (Story 1.4) and integrate size validation.
+            </artifact>
+            <artifact path="app/exceptions.py" kind="exception class" symbol="XMLValidationError" lines="9-44" reason="Custom exception class for XML errors. May need similar exception for file size exceeded or reuse error handling pattern">
+                XMLValidationError exception class with message, line, and column attributes. Pattern can be followed for size limit exceptions.
+            </artifact>
+            <artifact path="tests/unit/test_config.py" kind="test" symbol="test_config_loads_max_file_size_from_environment" lines="13-38" reason="Existing test patterns for configuration. Can reference for testing size limit configuration">
+                Test file with existing patterns for testing configuration loading from environment variables.
+            </artifact>
+        </code>
+        <dependencies>
+            <python>
+                <package name="Flask" version=">=3.0.0,<4.0.0">Web framework for route handlers and request handling</package>
+                <package name="lxml" version=">=5.0.0">XML parsing library (used by other services, validation should occur before parsing)</package>
+            </python>
+        </dependencies>
+    </artifacts>
+
+    <constraints>
+        <constraint type="architecture">
+            Follow exact directory structure from Architecture document. Validation utilities in app/utils/validators.py. Configuration in app/config.py. Route handlers in app/routes/convert.py.
+        </constraint>
+        <constraint type="error-handling">
+            MUST use structured error response format: {error: {code: "FILE_SIZE_EXCEEDED", message: "...", details: "..."}}. HTTP 413 status code for payload too large. Error messages must be clear and actionable.
+        </constraint>
+        <constraint type="performance">
+            Validation MUST occur before XML parsing to save resources. Early rejection prevents unnecessary processing of large requests.
+        </constraint>
+        <constraint type="configuration">
+            Size limit must be configurable via environment variables following 12-factor app principles. Default: 300MB (314572800 bytes).
+        </constraint>
+        <constraint type="testing">
+            Use pytest framework. Unit tests in tests/unit/ for validation function. Integration tests in tests/integration/ for endpoint size validation. Test all boundary conditions (exactly 300MB, 300MB+1 byte).
+        </constraint>
+        <constraint type="reuse">
+            REUSE app/config.py for configuration management (MAX_FILE_SIZE already exists, may need MAX_REQUEST_SIZE). REUSE error response format from Story 1.5. REUSE app/routes/convert.py route handler structure. REUSE Flask request handling patterns from Story 1.4.
+        </constraint>
+    </constraints>
+
+    <interfaces>
+        <interface name="validate_request_size" kind="function signature" signature="def validate_request_size(request, max_size: int = None) -> None or raises FileSizeExceededError" path="app/utils/validators.py">
+            Request size validation function. Checks Content-Length header or request body size against max_size limit. Raises exception if exceeded. Should be called early in route handler before parsing.
+        </interface>
+        <interface name="Config.MAX_FILE_SIZE" kind="configuration constant" signature="MAX_FILE_SIZE = int(os.environ.get('MAX_FILE_SIZE', 314572800))" path="app/config.py">
+            Configuration constant for maximum file size. Currently set to 300MB (314572800 bytes). Supports environment variable override via MAX_FILE_SIZE.
+        </interface>
+        <interface name="convert_bp.route" kind="Flask route decorator" signature="@convert_bp.route('/convert/xml-to-json', methods=['POST'])" path="app/routes/convert.py">
+            Flask blueprint route where size validation must be integrated. Validation should be first step in route handler before XML parsing.
+        </interface>
+    </interfaces>
+
+    <tests>
+        <standards>
+            Use pytest framework for all testing. Unit tests in tests/unit/ for validation function. Integration tests in tests/integration/ for endpoint size validation. Test organization mirrors source structure. Test all boundary conditions and error paths. Verify error response format consistency. Ensure validation occurs before parsing (performance check).
+        </standards>
+        <locations>
+            tests/unit/test_validators.py (new file for validation function tests), tests/integration/test_error_handling.py (may exist from Story 1.5, update with size validation tests)
+        </locations>
+        <ideas>
+            <test ac="1">Test Content-Length header validation: mock request with Content-Length > 300MB, verify 413 response before body read</test>
+            <test ac="1,2">Test request body size validation: create request with body > 300MB, verify 413 response</test>
+            <test ac="2">Test boundary conditions: exactly 300MB should pass, 300MB+1 byte should fail</test>
+            <test ac="3">Test early rejection: verify validation occurs before XML parsing (mock XML parser to ensure it's not called)</test>
+            <test ac="4">Test error message: verify error response includes clear message about 300MB limit</test>
+            <test ac="4,6">Test error response format: verify structured format {error: {code: "FILE_SIZE_EXCEEDED", message, details}}</test>
+            <test ac="5">Test configuration: verify environment variable override works (if time permits)</test>
+            <test ac="6">Test all validation paths: Content-Length present, Content-Length absent, Content-Length invalid format</test>
+        </ideas>
+    </tests>
+</story-context>
+

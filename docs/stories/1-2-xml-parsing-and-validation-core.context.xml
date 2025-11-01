@@ -1,0 +1,194 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+    <metadata>
+        <epicId>1</epicId>
+        <storyId>1.2</storyId>
+        <title>XML Parsing and Validation Core</title>
+        <status>ready-for-dev</status>
+        <generatedAt>2025-10-30</generatedAt>
+        <generator>BMAD Story Context Workflow</generator>
+        <sourceStoryPath>docs/stories/1-2-xml-parsing-and-validation-core.md</sourceStoryPath>
+    </metadata>
+
+    <story>
+        <asA>API developer</asA>
+        <iWant>a robust XML parsing engine that validates and parses XML input</iWant>
+        <soThat>all conversion endpoints can rely on consistent, validated XML data</soThat>
+        <tasks>
+            <task id="1" acs="1">
+                <title>Integrate XML parsing library</title>
+                <subtasks>
+                    <subtask>Add lxml dependency to requirements.txt (latest version)</subtask>
+                    <subtask>Import lxml.etree in app/services/xml_parser.py</subtask>
+                    <subtask>Verify lxml installation and basic functionality</subtask>
+                </subtasks>
+            </task>
+            <task id="2" acs="1,2">
+                <title>Implement XML parsing function</title>
+                <subtasks>
+                    <subtask>Create app/services/xml_parser.py module</subtask>
+                    <subtask>Implement parse_xml(xml_string: str) function that accepts XML string and returns parsed element tree</subtask>
+                    <subtask>Configure lxml parser with security settings (resolve_entities=False, huge_tree=False) for XML attack protection</subtask>
+                    <subtask>Implement basic XML syntax validation during parsing</subtask>
+                    <subtask>Handle UTF-8 encoding (assumed standard encoding)</subtask>
+                </subtasks>
+            </task>
+            <task id="3" acs="3">
+                <title>Implement namespace handling</title>
+                <subtasks>
+                    <subtask>Configure lxml parser to preserve namespace information</subtask>
+                    <subtask>Test parsing with XML documents containing namespaces</subtask>
+                    <subtask>Ensure namespace declarations are accessible in parsed tree</subtask>
+                    <subtask>Document namespace handling approach in code comments</subtask>
+                </subtasks>
+            </task>
+            <task id="4" acs="4">
+                <title>Implement error detection with location reporting</title>
+                <subtasks>
+                    <subtask>Create custom exception class XMLValidationError in app/exceptions.py</subtask>
+                    <subtask>Capture lxml parsing exceptions (XMLSyntaxError, etc.)</subtask>
+                    <subtask>Extract error location information (line number, column number) from lxml error messages</subtask>
+                    <subtask>Raise XMLValidationError with error message and location details when parsing fails</subtask>
+                    <subtask>Format error message to include actionable information: "Invalid XML syntax at line X, column Y: [error details]"</subtask>
+                </subtasks>
+            </task>
+            <task id="5" acs="5">
+                <title>Write comprehensive unit tests</title>
+                <subtasks>
+                    <subtask>Create tests/unit/test_xml_parser.py test file</subtask>
+                    <subtask>Test valid XML parsing with simple structure</subtask>
+                    <subtask>Test valid XML parsing with nested structures</subtask>
+                    <subtask>Test valid XML parsing with attributes</subtask>
+                    <subtask>Test namespace handling with default namespaces</subtask>
+                    <subtask>Test namespace handling with prefixed namespaces</subtask>
+                    <subtask>Test namespace handling with multiple namespaces</subtask>
+                    <subtask>Test malformed XML scenarios: unclosed tags, invalid syntax, mismatched tags, invalid characters</subtask>
+                    <subtask>Verify error detection returns line/column location for malformed XML</subtask>
+                    <subtask>Test edge cases: special characters (unicode, entities), empty XML document, XML with only text content, XML with only attributes</subtask>
+                    <subtask>Test XML attack protection (large entity expansion attempts, if applicable)</subtask>
+                    <subtask>Ensure test coverage > 80% for xml_parser.py</subtask>
+                </subtasks>
+            </task>
+        </tasks>
+    </story>
+
+    <acceptanceCriteria>
+        <ac id="1">XML parsing library integrated (e.g., lxml or xml.etree)</ac>
+        <ac id="2">XML validation function that checks syntax and structure</ac>
+        <ac id="3">XML parsing handles namespaces correctly</ac>
+        <ac id="4">Error detection returns specific error location (line/column) for malformed XML</ac>
+        <ac id="5">Unit tests cover valid XML, malformed XML, and edge cases (namespaces, special characters)</ac>
+    </acceptanceCriteria>
+
+    <artifacts>
+        <docs>
+            <doc path="docs/PRD.md" title="Product Requirements Document" section="Functional Requirements">
+        Provides project goals: reliable XML-to-JSON conversion with high accuracy, handling large XML files efficiently (up to 300MB), clear error messages. FR002 specifies XML structure and syntax validation before processing.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Decision Summary">
+        Defines technology stack: Python 3.11, Flask 3.0.x, lxml for XML parsing (better performance for large files, namespace support). XML Parsing category decision specifies lxml (latest) for Epic 1 and Epic 2.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Project Structure">
+        Defines complete project directory structure: app/services/ directory with xml_parser.py module for XML parsing and validation. Test organization: tests/unit/ for unit tests.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Implementation Patterns">
+        Naming conventions: snake_case for files/functions (xml_parser.py), PascalCase for classes (XMLValidationError). Module organization: business logic in app/services/.
+            </doc>
+            <doc path="docs/epic-1-context.md" title="Epic 1 Technical Specification" section="Detailed Design">
+        Services and modules: app/services/xml_parser.py (XML parsing and validation logic), app/exceptions.py (custom exception classes including XMLValidationError). Service interface: parse_xml(xml_string: str) returns parsed XML tree or raises XMLValidationError.
+            </doc>
+            <doc path="docs/epic-1-context.md" title="Epic 1 Technical Specification" section="Acceptance Criteria (Authoritative)">
+        AC1.4: XML Parsing Library Integration - lxml integrated and functional, validation function checks syntax and structure, parsing handles namespaces correctly. AC1.5: XML Error Detection - returns specific error location (line/column) for malformed XML.
+            </doc>
+            <doc path="docs/epic-1-context.md" title="Epic 1 Technical Specification" section="Security Requirements">
+        XML parser configuration to limit entity expansion and prevent DoS attacks. Use lxml with resolve_entities=False or huge_tree=False for very large structures. Protection against XML bomb attacks (billion laughs, quadratic blowup).
+            </doc>
+            <doc path="docs/epic-1-context.md" title="Epic 1 Technical Specification" section="Test Strategy Summary">
+        Unit tests in tests/unit/ for xml_parser.py: XML parsing, validation, namespace handling, error detection. Test coverage target: > 80% for core conversion logic. Test fixtures for various XML structures and edge cases.
+            </doc>
+            <doc path="docs/epics.md" title="Epic Breakdown" section="Story 1.2">
+        Story 1.2 user story, acceptance criteria (5 ACs), and prerequisites (Story 1.1). Defines requirements for XML parsing library integration, validation, namespace handling, error detection with location reporting, and comprehensive unit tests.
+            </doc>
+            <doc path="docs/stories/1-1-project-setup-and-flask-application-foundation.md" title="Story 1.1" section="Dev Agent Record">
+        Learnings from previous story: Flask app factory pattern in app/__init__.py, configuration in app/config.py, test structure follows pytest framework. Exception placeholder exists in app/exceptions.py (currently empty). Services directory exists with only __init__.py - create xml_parser.py module here.
+            </doc>
+        </docs>
+        <code>
+            <file path="app/exceptions.py" kind="exception module" symbol="XMLValidationError (to be created)" lines="1-10">
+        Placeholder file exists but is currently empty. This story should create XMLValidationError exception class here. File structure ready for custom exception implementation.
+            </file>
+            <file path="app/services/__init__.py" kind="service package" symbol="services package" lines="1-4">
+        Package initialization file exists. Services directory structure is ready for xml_parser.py module creation.
+            </file>
+            <file path="app/config.py" kind="configuration module" symbol="Config class" lines="21-25">
+        Configuration management with MAX_FILE_SIZE and LOG_LEVEL settings. Environment-based configuration pattern to follow for any parser-specific settings if needed.
+            </file>
+            <file path="tests/unit/test_app.py" kind="test file" symbol="test_app factory" lines="1-37">
+        Example unit test patterns using pytest. Follows same structure and patterns for test_xml_parser.py. Uses pytest fixtures and descriptive test names.
+            </file>
+            <file path="tests/unit/test_config.py" kind="test file" symbol="test_config class" lines="1-150">
+        Comprehensive test examples for environment variable loading and defaults. Shows pattern for testing configuration and exception handling.
+            </file>
+        </code>
+        <dependencies>
+            <ecosystem name="python">
+                <package name="Flask" version="3.0.x" purpose="Web framework (already integrated)" />
+                <package name="lxml" version="latest" purpose="XML parsing and validation library (to be added in this story)" />
+            </ecosystem>
+            <ecosystem name="python-stdlib">
+                <module name="xml.etree.ElementTree" purpose="Not used - using lxml instead for better performance and namespace support" />
+            </ecosystem>
+        </dependencies>
+    </artifacts>
+
+    <constraints>
+        <constraint type="structure">
+      Follow exact directory structure from Architecture document: app/services/xml_parser.py for XML parsing service, app/exceptions.py for custom exceptions, tests/unit/test_xml_parser.py for unit tests.
+        </constraint>
+        <constraint type="naming">
+      Files: snake_case (xml_parser.py). Classes: PascalCase (XMLValidationError). Functions/Variables: snake_case (parse_xml). Follow established naming patterns from Story 1.1.
+        </constraint>
+        <constraint type="pattern">
+      XML parsing service pattern in app/services/xml_parser.py. Custom exception in app/exceptions.py. Configuration loaded from environment variables with defaults (following 12-factor app principles established in Story 1.1).
+        </constraint>
+        <constraint type="testing">
+      Use pytest framework. Unit tests in tests/unit/ for core functions. Test coverage target: > 80% for core logic. Test fixtures for various XML structures and edge cases. Follow test patterns from test_app.py and test_config.py.
+        </constraint>
+        <constraint type="security">
+      XML parser configuration must include security settings: resolve_entities=False, huge_tree=False to prevent XML attack vectors (billion laughs, quadratic blowup, entity expansion attacks).
+        </constraint>
+        <constraint type="performance">
+      lxml selected for better performance with large files and namespace support. Consider streaming parsing (iterparse) for future optimization (not required in this story but prepare for Story 1.7).
+        </constraint>
+        <constraint type="runtime">
+      Python 3.11 runtime environment required. Flask 3.0.x web framework (already integrated).
+        </constraint>
+    </constraints>
+
+    <interfaces>
+        <interface name="parse_xml" kind="function signature" signature="def parse_xml(xml_string: str) -> etree._Element" path="app/services/xml_parser.py">
+      XML parsing function that accepts XML string and returns parsed element tree. Raises XMLValidationError on invalid XML. Must preserve namespace information and handle UTF-8 encoding.
+        </interface>
+        <interface name="XMLValidationError" kind="exception class" signature="class XMLValidationError(Exception): message, line, column" path="app/exceptions.py">
+      Custom exception class for XML validation errors. Should include error message, line number, and column number for actionable error reporting. Will be caught by error handlers in future stories.
+        </interface>
+    </interfaces>
+
+    <tests>
+        <standards>
+      Use pytest framework for all testing. Unit tests in tests/unit/ for core functions. Test organization mirrors source structure. Test coverage target: > 80% for core conversion logic. Use descriptive test names following test_ pattern. Follow patterns established in test_app.py and test_config.py from Story 1.1.
+        </standards>
+        <locations>
+            <location>tests/unit/</location>
+            <location>tests/integration/</location>
+            <location>tests/performance/</location>
+        </locations>
+        <ideas>
+            <idea ac="1">Test lxml library integration: verify lxml.etree can be imported, basic XML parsing works, parser configuration applies security settings</idea>
+            <idea ac="2">Test XML validation: verify parse_xml() raises XMLValidationError for invalid XML syntax, verify parse_xml() returns valid element tree for well-formed XML</idea>
+            <idea ac="3">Test namespace handling: verify default namespaces are preserved, prefixed namespaces are accessible, multiple namespaces in same document work correctly</idea>
+            <idea ac="4">Test error detection: verify XMLValidationError includes line number and column number, error message format matches "Invalid XML syntax at line X, column Y: [details]", test various malformed XML scenarios (unclosed tags, mismatched tags, invalid characters)</idea>
+            <idea ac="5">Test edge cases: special characters (unicode, XML entities), empty XML document, XML with only text content, XML with only attributes, deeply nested structures. Test XML attack protection (large entity expansion attempts). Verify test coverage > 80%</idea>
+        </ideas>
+    </tests>
+</story-context>
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <level1>
+        <level2>
+            <level3>deep_value</level3>
+        </level2>
+    </level1>
+    <section>
+        <item>
+            <name>Item 1</name>
+            <value>100</value>
+        </item>
+    </section>
+</root>
+
+

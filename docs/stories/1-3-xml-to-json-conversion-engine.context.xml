@@ -1,0 +1,171 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+    <metadata>
+        <epicId>1</epicId>
+        <storyId>1.3</storyId>
+        <title>XML-to-JSON Conversion Engine</title>
+        <status>drafted</status>
+        <generatedAt>2025-10-30</generatedAt>
+        <generator>BMAD Story Context Workflow</generator>
+        <sourceStoryPath>docs/stories/1-3-xml-to-json-conversion-engine.md</sourceStoryPath>
+    </metadata>
+
+    <story>
+        <asA>API consumer</asA>
+        <iWant>to convert XML data to JSON format</iWant>
+        <soThat>I can use the data in modern JSON-based systems</soThat>
+        <tasks>
+            <task id="1" acs="1,2,3,4">
+                <title>Implement XML-to-JSON conversion function</title>
+                <subtasks>
+                    <subtask>Create app/services/json_converter.py module</subtask>
+                    <subtask>Implement convert_xml_to_json(xml_root: etree._Element) function that accepts parsed XML tree and returns JSON-serializable dict</subtask>
+                    <subtask>Handle XML elements: convert to JSON objects with element names as keys</subtask>
+                    <subtask>Handle XML attributes: include as special key (e.g., "@attributes" or "@attr") or merge with element properties</subtask>
+                    <subtask>Handle XML text content: preserve text values appropriately</subtask>
+                    <subtask>Handle nested structures: recursively process child elements</subtask>
+                    <subtask>Handle XML namespaces: represent namespace information in JSON (preserve namespace URIs, handle prefixed elements)</subtask>
+                    <subtask>Handle data types: detect and preserve text, numbers, booleans appropriately</subtask>
+                    <subtask>Handle multiple child elements with same name: convert to JSON arrays</subtask>
+                    <subtask>Handle mixed content (elements with both text and child elements): preserve structure appropriately</subtask>
+                </subtasks>
+            </task>
+            <task id="2" acs="1,2">
+                <title>Integrate with XML parser service</title>
+                <subtasks>
+                    <subtask>Import parse_xml from app/services/xml_parser</subtask>
+                    <subtask>Create wrapper function convert_xml_string_to_json(xml_string: str) that calls parse_xml then convert_xml_to_json</subtask>
+                    <subtask>Handle XMLValidationError exceptions from parse_xml and propagate appropriately</subtask>
+                    <subtask>Ensure namespace information from parsed XML is available to conversion function</subtask>
+                </subtasks>
+            </task>
+            <task id="3" acs="5">
+                <title>Write comprehensive unit tests</title>
+                <subtasks>
+                    <subtask>Create tests/unit/test_json_converter.py test file</subtask>
+                    <subtask>Test simple XML structure conversion (single root with children)</subtask>
+                    <subtask>Test nested XML structure conversion (multi-level nesting)</subtask>
+                    <subtask>Test XML with attributes conversion (attributes preserved in JSON)</subtask>
+                    <subtask>Test XML with namespaces conversion (default namespace, prefixed namespace, multiple namespaces)</subtask>
+                    <subtask>Test complex nested structures (deep nesting, mixed content)</subtask>
+                    <subtask>Test data type preservation (text strings, numeric values, boolean detection)</subtask>
+                    <subtask>Test multiple elements with same name (array conversion)</subtask>
+                    <subtask>Test mixed content (elements with both text and child elements)</subtask>
+                    <subtask>Test empty elements (handled appropriately)</subtask>
+                    <subtask>Test XML with special characters (unicode, entities)</subtask>
+                    <subtask>Test integration with parse_xml (end-to-end conversion from XML string to JSON)</subtask>
+                    <subtask>Ensure test coverage > 80% for json_converter.py</subtask>
+                </subtasks>
+            </task>
+        </tasks>
+    </story>
+
+    <acceptanceCriteria>
+        <ac id="1">Conversion function transforms XML to JSON preserving all elements, attributes, and hierarchy</ac>
+        <ac id="2">XML namespaces correctly represented in JSON output</ac>
+        <ac id="3">Conversion handles complex nested structures</ac>
+        <ac id="4">Conversion preserves data types appropriately (text, numbers, booleans)</ac>
+        <ac id="5">Unit tests verify accurate conversion for various XML structures</ac>
+    </acceptanceCriteria>
+
+    <artifacts>
+        <docs>
+            <doc path="docs/epics.md" title="Epic Breakdown" section="Story 1.3">
+        Story 1.3 user story, acceptance criteria (5 ACs), and prerequisites (Story 1.2). Defines requirements for XML-to-JSON conversion preserving elements, attributes, hierarchy, namespaces, complex nested structures, data types, and comprehensive unit tests.
+            </doc>
+            <doc path="docs/PRD.md" title="Product Requirements Document" section="Functional Requirements">
+        Provides project goals: reliable XML-to-JSON conversion with high accuracy, handling large XML files efficiently (up to 300MB), clear error messages. FR003 specifies XML-to-JSON conversion, FR004 preserves all XML data elements, attributes, and hierarchical structure, FR005 handles XML namespaces correctly.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Project Structure">
+        Defines complete project directory structure: app/services/ directory with json_converter.py module for XML-to-JSON conversion. Test organization: tests/unit/ for unit tests. Epic-to-Architecture mapping specifies json_converter.py location.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Implementation Patterns">
+        Naming conventions: snake_case for files/functions (json_converter.py). Module organization: business logic in app/services/. Service layer communication: services are called from route handlers, services return data structures (dicts, strings), not Flask response objects.
+            </doc>
+            <doc path="docs/stories/1-2-xml-parsing-and-validation-core.md" title="Story 1.2" section="Dev Agent Record">
+        Learnings from previous story: XML parser service exists at app/services/xml_parser.py with parse_xml() function - REUSE this service. Exception class XMLValidationError exists in app/exceptions.py - REUSE this. Parsed XML format returns lxml.etree._Element. Namespace handling preserved by lxml. Test patterns follow pytest framework.
+            </doc>
+        </docs>
+        <code>
+            <file path="app/services/xml_parser.py" kind="service module" symbol="parse_xml function" lines="14-64">
+        XML parsing service to REUSE. Provides parse_xml(xml_string: str) function that accepts XML string and returns lxml.etree._Element. Raises XMLValidationError on invalid XML. Preserves namespace information automatically via lxml default behavior. Function signature: def parse_xml(xml_string: str) -> etree._Element. This service must be imported and used by json_converter.py rather than recreating XML parsing logic.
+            </file>
+            <file path="app/exceptions.py" kind="exception module" symbol="XMLValidationError class" lines="9-44">
+        Custom exception class to REUSE. XMLValidationError includes message, line, and column attributes for detailed error reporting. Formatted error messages: "Invalid XML syntax at line X, column Y: [details]". This exception should be caught and handled when calling parse_xml() in json_converter.py.
+            </file>
+            <file path="app/services/__init__.py" kind="service package" symbol="services package" lines="1-4">
+        Package initialization file exists. Services directory structure is ready for json_converter.py module creation.
+            </file>
+            <file path="tests/unit/test_xml_parser.py" kind="test file" symbol="test_xml_parser patterns" lines="1-324">
+        Example unit test patterns using pytest. Follows same structure and patterns for test_json_converter.py. Uses pytest fixtures for XML samples, descriptive test names. Test organization with fixtures for sample XML structures, comprehensive edge case coverage. Shows pattern for testing services and integration with parse_xml.
+            </file>
+        </code>
+        <dependencies>
+            <ecosystem name="python">
+                <package name="Flask" version="3.0.x" purpose="Web framework (already integrated)" />
+                <package name="lxml" version=">=5.0.0" purpose="XML parsing library (already integrated in Story 1.2)" />
+            </ecosystem>
+            <ecosystem name="python-stdlib">
+                <module name="json" purpose="JSON serialization - standard library, no external dependency needed for JSON conversion" />
+            </ecosystem>
+        </dependencies>
+    </artifacts>
+
+    <constraints>
+        <constraint type="structure">
+      Follow exact directory structure from Architecture document: app/services/json_converter.py for XML-to-JSON conversion service, tests/unit/test_json_converter.py for unit tests.
+        </constraint>
+        <constraint type="naming">
+      Files: snake_case (json_converter.py). Functions/Variables: snake_case (convert_xml_to_json). Follow established naming patterns from Story 1.2.
+        </constraint>
+        <constraint type="pattern">
+      XML-to-JSON conversion service pattern in app/services/json_converter.py. Reuse XML parsing service from app/services/xml_parser.py - do not recreate XML parsing logic. Service returns JSON-serializable dict (not Flask response). Custom exception XMLValidationError in app/exceptions.py already exists - reuse it.
+        </constraint>
+        <constraint type="testing">
+      Use pytest framework. Unit tests in tests/unit/ for core functions. Test coverage target: > 80% for core conversion logic. Test fixtures for various XML structures and edge cases. Follow test patterns from test_xml_parser.py. Integration tests should verify end-to-end flow: XML string → parse_xml() → convert_xml_to_json() → JSON output.
+        </constraint>
+        <constraint type="reuse">
+      CRITICAL: Reuse app/services/xml_parser.py parse_xml() function - do not recreate XML parsing logic. Reuse app/exceptions.py XMLValidationError exception class. Build on existing XML parsing infrastructure from Story 1.2 rather than rebuilding.
+        </constraint>
+        <constraint type="data-types">
+      Conversion must preserve data types appropriately: detect and preserve text strings, numeric values (integers, floats), boolean values. Handle XML text content appropriately when converting to JSON.
+        </constraint>
+        <constraint type="namespaces">
+      XML namespaces must be correctly represented in JSON output. Namespace information is preserved in parsed XML via lxml (accessible via .nsmap attribute and namespace-qualified tags). Conversion function should handle namespace URIs and prefixed elements appropriately.
+        </constraint>
+    </constraints>
+
+    <interfaces>
+        <interface name="convert_xml_to_json" kind="function signature" signature="def convert_xml_to_json(xml_root: etree._Element) -> dict" path="app/services/json_converter.py">
+      XML-to-JSON conversion function that accepts parsed XML element tree (lxml.etree._Element) and returns JSON-serializable dict. Must preserve all XML elements, attributes, hierarchy, and namespaces. Handles nested structures, multiple elements with same name (arrays), mixed content, data types.
+        </interface>
+        <interface name="convert_xml_string_to_json" kind="function signature" signature="def convert_xml_string_to_json(xml_string: str) -> dict" path="app/services/json_converter.py">
+      Wrapper function that accepts XML string, calls parse_xml() to parse XML, then calls convert_xml_to_json() to convert to JSON. Handles XMLValidationError exceptions from parse_xml and propagates appropriately. Returns JSON-serializable dict.
+        </interface>
+        <interface name="parse_xml" kind="function signature" signature="def parse_xml(xml_string: str) -> etree._Element" path="app/services/xml_parser.py">
+      XML parsing function to REUSE from Story 1.2. Accepts XML string and returns parsed element tree. Raises XMLValidationError on invalid XML. Preserves namespace information. This interface must be imported and used by json_converter.py.
+        </interface>
+        <interface name="XMLValidationError" kind="exception class" signature="class XMLValidationError(Exception): message, line, column" path="app/exceptions.py">
+      Custom exception class to REUSE from Story 1.2. Should be caught when calling parse_xml() in json_converter.py. Includes error message, line number, and column number for actionable error reporting.
+        </interface>
+    </interfaces>
+
+    <tests>
+        <standards>
+      Use pytest framework for all testing. Unit tests in tests/unit/ for core functions. Test organization mirrors source structure. Test coverage target: > 80% for core conversion logic. Use descriptive test names following test_ pattern. Follow patterns established in test_xml_parser.py from Story 1.2. Use pytest fixtures for various XML structures and edge cases. Integration tests should verify end-to-end flow: XML string → parse_xml() → convert_xml_to_json() → JSON output.
+        </standards>
+        <locations>
+            <location>tests/unit/</location>
+            <location>tests/integration/</location>
+        </locations>
+        <ideas>
+            <idea ac="1">Test XML-to-JSON conversion preserves all elements, attributes, and hierarchy: simple structure (single root with children), nested structure (multi-level nesting), XML with attributes (attributes preserved in JSON output), multiple elements with same name (converted to JSON arrays)</idea>
+            <idea ac="2">Test XML namespaces correctly represented in JSON: default namespace preserved, prefixed namespace preserved, multiple namespaces in same document handled correctly, namespace information accessible in JSON output</idea>
+            <idea ac="3">Test complex nested structures: deep nesting (multi-level elements), mixed content (elements with both text and child elements), empty elements handled appropriately</idea>
+            <idea ac="4">Test data type preservation: text strings preserved as strings, numeric values detected and preserved (integers, floats), boolean values detected appropriately (true/false, yes/no patterns if applicable), special characters and unicode handled</idea>
+            <idea ac="5">Test comprehensive coverage: simple XML structure, nested XML structure, XML with attributes, XML with namespaces, complex nested structures, data type preservation, multiple elements with same name (arrays), mixed content, empty elements, XML with special characters, integration with parse_xml (end-to-end from XML string to JSON). Verify test coverage > 80% for json_converter.py</idea>
+        </ideas>
+    </tests>
+</story-context>
+
+
+

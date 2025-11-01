@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<user id="123" active="true" role="admin">
+  <name>Alice</name>
+  <email>alice@example.com</email>
+  <profile>
+    <avatar url="https://example.com/avatar.jpg" width="200" height="200" />
+    <bio>Software developer passionate about clean code</bio>
+  </profile>
+  <preferences lang="en" theme="dark" />
+</user>
+

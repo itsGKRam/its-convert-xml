@@ -1,0 +1,28 @@
+{
+  "user": {
+    "@attributes": {
+      "id": "123",
+      "active": "true",
+      "role": "admin"
+    },
+    "name": "Alice",
+    "email": "alice@example.com",
+    "profile": {
+      "avatar": {
+        "@attributes": {
+          "url": "https://example.com/avatar.jpg",
+          "width": "200",
+          "height": "200"
+        }
+      },
+      "bio": "Software developer passionate about clean code"
+    },
+    "preferences": {
+      "@attributes": {
+        "lang": "en",
+        "theme": "dark"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <book>
+    <title>Python Programming</title>
+    <author>
+      <name>John Doe</name>
+      <email>john@example.com</email>
+      <bio>Software engineer with 10 years of experience</bio>
+    </author>
+    <price>29.99</price>
+    <isbn>978-0-123456-78-9</isbn>
+  </book>
+  <book>
+    <title>Flask Web Development</title>
+    <author>
+      <name>Jane Smith</name>
+      <email>jane@example.com</email>
+    </author>
+    <price>39.99</price>
+    <isbn>978-0-987654-32-1</isbn>
+  </book>
+</catalog>
+

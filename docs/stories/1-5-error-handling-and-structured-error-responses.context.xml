@@ -1,0 +1,178 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+    <metadata>
+        <epicId>1</epicId>
+        <storyId>1.5</storyId>
+        <title>Error Handling and Structured Error Responses</title>
+        <status>drafted</status>
+        <generatedAt>2025-10-30</generatedAt>
+        <generator>BMAD Story Context Workflow</generator>
+        <sourceStoryPath>docs/stories/1-5-error-handling-and-structured-error-responses.md</sourceStoryPath>
+    </metadata>
+
+    <story>
+        <asA>API consumer</asA>
+        <iWant>clear, actionable error messages when requests fail</iWant>
+        <soThat>I can quickly identify and fix issues with my requests</soThat>
+        <tasks>
+            <task id="1" acs="1,6">
+                <title>Implement structured error response format</title>
+                <subtasks>
+                    <subtask>Create error response helper function in app/routes/convert.py or app/utils/validators.py</subtask>
+                    <subtask>Implement function that returns consistent JSON error structure: {error: {code, message, details}}</subtask>
+                    <subtask>Define error codes for different error types (INVALID_CONTENT_TYPE, XML_PARSE_ERROR, FILE_SIZE_EXCEEDED, CONVERSION_ERROR, SERVER_ERROR)</subtask>
+                    <subtask>Ensure all error responses use this structured format</subtask>
+                    <subtask>Update existing error handling in Story 1.4 endpoint to use new format</subtask>
+                </subtasks>
+            </task>
+            <task id="2" acs="2,3,4">
+                <title>Implement HTTP status code mapping</title>
+                <subtasks>
+                    <subtask>Map client errors to HTTP 400 (invalid Content-Type, malformed XML)</subtask>
+                    <subtask>Map file size exceeded to HTTP 413 (Payload Too Large)</subtask>
+                    <subtask>Map server errors to HTTP 500 (unexpected exceptions)</subtask>
+                    <subtask>Implement status code selection logic in route handler</subtask>
+                    <subtask>Ensure status codes align with architecture specifications</subtask>
+                </subtasks>
+            </task>
+            <task id="3" acs="5">
+                <title>Enhance error messages with actionable information</title>
+                <subtasks>
+                    <subtask>Extract XML error location from XMLValidationError (line, column)</subtask>
+                    <subtask>Include error location in error message details for XML parsing errors</subtask>
+                    <subtask>Include specific header requirements in Content-Type validation errors</subtask>
+                    <subtask>Include size limit information in file size exceeded errors</subtask>
+                    <subtask>Ensure error messages are clear and actionable (no technical jargon for end users)</subtask>
+                </subtasks>
+            </task>
+            <task id="4" acs="4">
+                <title>Implement error logging</title>
+                <subtasks>
+                    <subtask>Configure Python logging for error tracking</subtask>
+                    <subtask>Log all errors with full details (including stack traces for server errors)</subtask>
+                    <subtask>Log XMLValidationError with line/column information</subtask>
+                    <subtask>Log unexpected exceptions with full stack trace</subtask>
+                    <subtask>Ensure user-facing error messages are sanitized (no sensitive info)</subtask>
+                </subtasks>
+            </task>
+            <task id="5" acs="7">
+                <title>Write comprehensive error handling tests</title>
+                <subtasks>
+                    <subtask>Create or update tests/integration/test_error_handling.py</subtask>
+                    <subtask>Test HTTP 400 responses: invalid Content-Type, malformed XML, missing headers</subtask>
+                    <subtask>Test HTTP 413 response: file size exceeded (when implemented in Story 1.6)</subtask>
+                    <subtask>Test HTTP 500 response: unexpected server errors (mocked)</subtask>
+                    <subtask>Test error response format consistency across all error types</subtask>
+                    <subtask>Test error messages include actionable information</subtask>
+                    <subtask>Test error logging (verify errors are logged appropriately)</subtask>
+                    <subtask>Test XMLValidationError includes line/column in error details</subtask>
+                    <subtask>Ensure all error paths are covered by tests</subtask>
+                </subtasks>
+            </task>
+        </tasks>
+    </story>
+
+    <acceptanceCriteria>
+        <ac id="1">Structured error response format for all error types (JSON structure with error code, message, details)</ac>
+        <ac id="2">HTTP 400 for client errors (malformed XML, invalid Content-Type, etc.)</ac>
+        <ac id="3">HTTP 413 for requests exceeding 300MB size limit</ac>
+        <ac id="4">HTTP 500 for server errors with generic message (detailed logging internally)</ac>
+        <ac id="5">Error messages include actionable information (XML error location, missing headers, etc.)</ac>
+        <ac id="6">Error response format consistent across all error scenarios</ac>
+        <ac id="7">Unit and integration tests cover all error paths</ac>
+    </acceptanceCriteria>
+
+    <artifacts>
+        <docs>
+            <doc path="docs/epics.md" title="Epic Breakdown" section="Story 1.5">
+        Story 1.5 user story, acceptance criteria (7 ACs), and prerequisites (Story 1.4). Defines requirements for structured error responses, HTTP status code mapping, actionable error messages, and comprehensive error handling tests.
+            </doc>
+            <doc path="docs/PRD.md" title="Product Requirements Document" section="Functional Requirements">
+        Provides project goals: clear, actionable error messages. FR007 specifies clear error messages for malformed XML, FR012 specifies structured JSON error responses, FR006 specifies HTTP status codes.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Error Response Format">
+        Defines consistent JSON error format: {error: {code, message, details}}. HTTP status codes: 400 (client error), 413 (payload too large), 500 (server error). Common error codes: INVALID_CONTENT_TYPE, XML_PARSE_ERROR, FILE_SIZE_EXCEEDED, CONVERSION_ERROR, SERVER_ERROR.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Logging Strategy">
+        Logging configuration: Python logging module with structured JSON format. Log levels: DEBUG (development), INFO (production). Include: timestamp, level, endpoint, message, context. Output to stdout for containerized deployments.
+            </doc>
+            <doc path="docs/stories/1-4-post-endpoint-for-xml-to-json.md" title="Story 1.4" section="Dev Agent Record">
+        Learnings from previous story: Route handlers in app/routes/convert.py use Flask Blueprint. Service integration: services raise exceptions, route handlers catch and convert to Flask responses. Follow this pattern for all error handling.
+            </doc>
+            <doc path="docs/stories/1-2-xml-parsing-and-validation-core.md" title="Story 1.2" section="Dev Agent Record">
+        Learnings: Exception class XMLValidationError exists in app/exceptions.py with message, line, and column attributes - REUSE this exception and extract location info for error messages.
+            </doc>
+        </docs>
+        <code>
+            <file path="app/routes/convert.py" kind="route module" symbol="convert_bp Blueprint" lines="1-25">
+        Route handler file with endpoint from Story 1.4. Error handling must be added to existing route handlers. Blueprint convert_bp already registered. Function pattern: @convert_bp.route('/path', methods=['POST']). This file must be modified to add structured error handling.
+            </file>
+            <file path="app/exceptions.py" kind="exception module" symbol="XMLValidationError class" lines="9-44">
+        Custom exception class to REUSE. XMLValidationError includes message, line, and column attributes for detailed error reporting. Error location information should be extracted and included in error response details.
+            </file>
+            <file path="app/utils/validators.py" kind="utility module" symbol="validators" lines="1-50">
+        Request validation utilities (may exist). Error formatting helper functions can be added here. If file doesn't exist, create it or add error helpers to route handler.
+            </file>
+            <file path="app/config.py" kind="config module" symbol="Config class" lines="1-100">
+        Configuration management including logging setup. Use existing logging configuration for error logging. May need to configure error logging levels and format.
+            </file>
+        </code>
+        <dependencies>
+            <ecosystem name="python">
+                <package name="Flask" version="3.0.x" purpose="Web framework (already integrated)" />
+            </ecosystem>
+            <ecosystem name="python-stdlib">
+                <module name="logging" purpose="Error logging - standard library, already configured" />
+                <module name="json" purpose="JSON serialization - standard library, used by Flask jsonify()" />
+            </ecosystem>
+        </dependencies>
+    </artifacts>
+
+    <constraints>
+        <constraint type="structure">
+      Follow exact directory structure from Architecture document: app/routes/convert.py for route handlers, app/utils/validators.py for error utilities (if created), tests/integration/ for integration tests.
+        </constraint>
+        <constraint type="naming">
+      Files: snake_case (validators.py, test_error_handling.py). Functions/Variables: snake_case (format_error_response, handle_error). Follow established naming patterns from Story 1.4.
+        </constraint>
+        <constraint type="pattern">
+      Error handling pattern: Services raise custom exceptions, route handlers catch and convert to JSON error responses. Error response format must be consistent: {error: {code, message, details}}. Error logging must include full details for debugging while user-facing messages are sanitized.
+        </constraint>
+        <constraint type="testing">
+      Use pytest framework. Integration tests in tests/integration/ for endpoint error testing. Test all error paths and scenarios. Test error response format consistency. Verify error logging works correctly.
+        </constraint>
+        <constraint type="reuse">
+      CRITICAL: Reuse app/exceptions.py XMLValidationError exception class - extract line/column information for error messages. Reuse app/config.py logging configuration. Reuse app/routes/convert.py route handlers - add error handling to existing endpoints.
+        </constraint>
+        <constraint type="error-format">
+      Error response format must be consistent across all error scenarios: {error: {code, message, details}}. HTTP status codes: 400 (client errors), 413 (file size exceeded), 500 (server errors). Error messages must be actionable and clear (no technical jargon for end users).
+        </constraint>
+    </constraints>
+
+    <interfaces>
+        <interface name="format_error_response" kind="function signature" signature="def format_error_response(code: str, message: str, details: str = None, status_code: int = 400) -> tuple" path="app/utils/validators.py or app/routes/convert.py">
+      Error response formatting function that creates consistent JSON error structure. Accepts error code, message, optional details, and HTTP status code. Returns Flask response tuple (jsonify result, status code).
+        </interface>
+        <interface name="XMLValidationError" kind="exception class" signature="class XMLValidationError(Exception): message, line, column" path="app/exceptions.py">
+      Custom exception class to REUSE from Story 1.2. Should be caught when calling conversion services. Includes error message, line number, and column number for actionable error reporting. Location info should be extracted and included in error response details.
+        </interface>
+    </interfaces>
+
+    <tests>
+        <standards>
+      Use pytest framework for all testing. Integration tests in tests/integration/ for endpoint error testing. Test organization mirrors source structure. Test all error paths and scenarios. Test error response format consistency. Verify error logging works correctly. Follow patterns established in test_health.py from Story 1.1.
+        </standards>
+        <locations>
+            <location>tests/integration/</location>
+        </locations>
+        <ideas>
+            <idea ac="1">Test structured error response format: verify all errors return {error: {code, message, details}} structure, verify error codes are consistent, verify error structure matches architecture specification</idea>
+            <idea ac="2">Test HTTP 400 responses: test invalid Content-Type returns 400, test malformed XML returns 400, test missing headers returns 400, verify error message indicates client error</idea>
+            <idea ac="3">Test HTTP 413 response: test file size exceeded returns 413 (when implemented), verify error message indicates size limit, verify error details include limit information</idea>
+            <idea ac="4">Test HTTP 500 response: test unexpected server errors return 500, verify generic error message for users, verify detailed error logged internally, verify no sensitive info in user-facing message</idea>
+            <idea ac="5">Test actionable error messages: test XMLValidationError includes line/column in details, test Content-Type errors include required values, test file size errors include limit information, verify messages are clear and actionable</idea>
+            <idea ac="6">Test error format consistency: verify all error types use same structure, verify all errors include code and message, verify details field is optional but consistent when present</idea>
+            <idea ac="7">Test comprehensive error paths: test all error scenarios are covered, test error logging works for all error types, test XMLValidationError details extraction, test unexpected exception handling, verify all error paths have tests</idea>
+        </ideas>
+    </tests>
+</story-context>
+

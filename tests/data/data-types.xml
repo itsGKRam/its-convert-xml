@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <string>text content</string>
+    <integer>42</integer>
+    <negative>-10</negative>
+    <float>3.14</float>
+    <scientific>1.23e10</scientific>
+    <boolean-true>true</boolean-true>
+    <boolean-false>false</boolean-false>
+    <leading-zero>007</leading-zero>
+    <zero>0</zero>
+    <empty></empty>
+</root>
+
+

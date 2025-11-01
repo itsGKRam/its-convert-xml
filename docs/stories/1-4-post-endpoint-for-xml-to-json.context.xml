@@ -1,0 +1,181 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+    <metadata>
+        <epicId>1</epicId>
+        <storyId>1.4</storyId>
+        <title>POST Endpoint for XML-to-JSON</title>
+        <status>drafted</status>
+        <generatedAt>2025-10-30</generatedAt>
+        <generator>BMAD Story Context Workflow</generator>
+        <sourceStoryPath>docs/stories/1-4-post-endpoint-for-xml-to-json.md</sourceStoryPath>
+    </metadata>
+
+    <story>
+        <asA>API consumer</asA>
+        <iWant>to send XML data via POST request and receive JSON response</iWant>
+        <soThat>I can integrate the conversion service into my applications</soThat>
+        <tasks>
+            <task id="1" acs="1,3,4,5">
+                <title>Implement POST endpoint handler</title>
+                <subtasks>
+                    <subtask>Create route handler function convert_xml_to_json() in app/routes/convert.py</subtask>
+                    <subtask>Define route decorator @convert_bp.route('/convert/xml-to-json', methods=['POST'])</subtask>
+                    <subtask>Import convert_xml_string_to_json from app.services.json_converter</subtask>
+                    <subtask>Extract XML string from Flask request body (request.data or request.get_data())</subtask>
+                    <subtask>Call convert_xml_string_to_json() service function</subtask>
+                    <subtask>Return Flask JSON response using jsonify() with HTTP 200 status</subtask>
+                    <subtask>Set Content-Type header to application/json in response</subtask>
+                </subtasks>
+            </task>
+            <task id="2" acs="2">
+                <title>Implement Content-Type validation</title>
+                <subtasks>
+                    <subtask>Import request from Flask</subtask>
+                    <subtask>Check request Content-Type header in route handler</subtask>
+                    <subtask>Accept application/xml or text/xml Content-Type values</subtask>
+                    <subtask>Return HTTP 400 error response if Content-Type invalid or missing</subtask>
+                    <subtask>Provide clear error message indicating required Content-Type values</subtask>
+                    <subtask>Follow architecture error response format (structured JSON error)</subtask>
+                </subtasks>
+            </task>
+            <task id="3" acs="4">
+                <title>Implement error handling integration</title>
+                <subtasks>
+                    <subtask>Import XMLValidationError from app.exceptions</subtask>
+                    <subtask>Wrap service call in try/except block to catch XMLValidationError</subtask>
+                    <subtask>Handle XMLValidationError exceptions from conversion service</subtask>
+                    <subtask>Convert XMLValidationError to HTTP 400 response with error details</subtask>
+                    <subtask>Handle unexpected exceptions and return HTTP 500 with generic error message</subtask>
+                    <subtask>Follow architecture error response format for all errors</subtask>
+                </subtasks>
+            </task>
+            <task id="4" acs="6">
+                <title>Write integration tests</title>
+                <subtasks>
+                    <subtask>Create tests/integration/test_xml_to_json_endpoint.py test file</subtask>
+                    <subtask>Test successful conversion: POST XML → receive JSON response</subtask>
+                    <subtask>Test Content-Type validation: invalid/missing Content-Type returns 400</subtask>
+                    <subtask>Test malformed XML: invalid XML returns 400 with error details</subtask>
+                    <subtask>Test response headers: Content-Type is application/json</subtask>
+                    <subtask>Test response status: successful request returns 200</subtask>
+                    <subtask>Test end-to-end flow: XML string → JSON dict → Flask response</subtask>
+                    <subtask>Use Flask test client for integration testing</subtask>
+                    <subtask>Follow test patterns from existing integration tests</subtask>
+                </subtasks>
+            </task>
+        </tasks>
+    </story>
+
+    <acceptanceCriteria>
+        <ac id="1">POST endpoint /convert/xml-to-json accepts XML in request body</ac>
+        <ac id="2">Endpoint validates Content-Type header (application/xml, text/xml)</ac>
+        <ac id="3">Endpoint calls parsing and conversion functions from previous stories</ac>
+        <ac id="4">Returns HTTP 200 with JSON response body on success</ac>
+        <ac id="5">Returns appropriate Content-Type header (application/json)</ac>
+        <ac id="6">Integration tests verify end-to-end conversion flow</ac>
+    </acceptanceCriteria>
+
+    <artifacts>
+        <docs>
+            <doc path="docs/epics.md" title="Epic Breakdown" section="Story 1.4">
+        Story 1.4 user story, acceptance criteria (6 ACs), and prerequisites (Story 1.3). Defines requirements for POST endpoint accepting XML, validating Content-Type, calling conversion service, and returning JSON response.
+            </doc>
+            <doc path="docs/PRD.md" title="Product Requirements Document" section="Functional Requirements">
+        Provides project goals: reliable XML-to-JSON conversion API endpoint. FR001 specifies POST endpoint accepting XML, FR006 specifies HTTP status codes, FR010 specifies Content-Type validation, FR012 specifies structured JSON error responses.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Project Structure">
+        Defines complete project directory structure: app/routes/convert.py for conversion endpoints. Test organization: tests/integration/ for integration tests. Epic-to-Architecture mapping specifies convert.py location for endpoints.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Communication Patterns">
+        Service layer communication: services are called from route handlers, services return data structures (dicts, strings), not Flask response objects. Route handlers convert service output to Flask responses. Error propagation: services raise custom exceptions, route handlers catch and convert to JSON error responses.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Error Response Format">
+        Consistent JSON error format across all endpoints: {error: {code, message, details}}. HTTP status codes: 400 (client error), 413 (payload too large), 500 (server error).
+            </doc>
+            <doc path="docs/stories/1-3-xml-to-json-conversion-engine.md" title="Story 1.3" section="Dev Agent Record">
+        Learnings from previous story: JSON converter service exists at app/services/json_converter.py with convert_xml_string_to_json() function - REUSE this service. Service returns Dict[str, Any] (not Flask response). Exception class XMLValidationError exists in app/exceptions.py - REUSE this.
+            </doc>
+            <doc path="docs/stories/1-1-project-setup-and-flask-application-foundation.md" title="Story 1.1" section="File List">
+        Learnings: Flask app factory pattern in app/__init__.py with blueprint registration. Route blueprint app/routes/convert.py exists with convert_bp Blueprint - add new route to this file. Health check pattern exists - follow same pattern for new endpoint.
+            </doc>
+        </docs>
+        <code>
+            <file path="app/routes/convert.py" kind="route module" symbol="convert_bp Blueprint" lines="1-25">
+        Route handler file to add endpoint. Blueprint convert_bp already registered in app/__init__.py. Existing health_check route shows pattern for route handlers. Function signature: @convert_bp.route('/health', methods=['GET']). This file must be modified to add POST /convert/xml-to-json endpoint.
+            </file>
+            <file path="app/services/json_converter.py" kind="service module" symbol="convert_xml_string_to_json function" lines="173-203">
+        JSON conversion service to REUSE. Provides convert_xml_string_to_json(xml_string: str) -> Dict[str, Any] function that accepts XML string and returns JSON-serializable dict. Raises XMLValidationError on invalid XML. This service must be imported and used by route handler rather than recreating conversion logic.
+            </file>
+            <file path="app/exceptions.py" kind="exception module" symbol="XMLValidationError class" lines="9-44">
+        Custom exception class to REUSE. XMLValidationError includes message, line, and column attributes for detailed error reporting. Formatted error messages: "Invalid XML syntax at line X, column Y: [details]". This exception should be caught and handled when calling convert_xml_string_to_json() in route handler.
+            </file>
+            <file path="app/__init__.py" kind="app factory" symbol="create_app function" lines="11-32">
+        Flask app factory with blueprint registration. convert_bp already registered. Pattern shows how to create Flask app instance and register blueprints. Route handlers in convert.py will be automatically available once added.
+            </file>
+            <file path="tests/integration/test_health.py" kind="test file" symbol="test_health patterns" lines="1-50">
+        Example integration test patterns using Flask test client. Follows same structure and patterns for test_xml_to_json_endpoint.py. Uses Flask test client, descriptive test names, HTTP status code assertions. Shows pattern for testing endpoints and integration with Flask app.
+            </file>
+        </code>
+        <dependencies>
+            <ecosystem name="python">
+                <package name="Flask" version="3.0.x" purpose="Web framework (already integrated)" />
+            </ecosystem>
+            <ecosystem name="python-stdlib">
+                <module name="json" purpose="JSON serialization - standard library, used by Flask jsonify()" />
+            </ecosystem>
+        </dependencies>
+    </artifacts>
+
+    <constraints>
+        <constraint type="structure">
+      Follow exact directory structure from Architecture document: app/routes/convert.py for route handlers, tests/integration/ for integration tests.
+        </constraint>
+        <constraint type="naming">
+      Files: snake_case (convert.py). Functions/Variables: snake_case (convert_xml_to_json). Routes: kebab-case in URLs (/convert/xml-to-json). Follow established naming patterns from Story 1.1 and Story 1.3.
+        </constraint>
+        <constraint type="pattern">
+      Route handler pattern in app/routes/convert.py. Reuse JSON conversion service from app/services/json_converter.py - do not recreate conversion logic. Service returns dict (not Flask response). Route handler converts service output to Flask JSON response using jsonify(). Custom exception XMLValidationError in app/exceptions.py already exists - reuse it.
+        </constraint>
+        <constraint type="testing">
+      Use pytest framework. Integration tests in tests/integration/ for endpoint testing. Use Flask test client for integration testing. Test request/response cycles end-to-end. Follow test patterns from test_health.py.
+        </constraint>
+        <constraint type="reuse">
+      CRITICAL: Reuse app/services/json_converter.py convert_xml_string_to_json() function - do not recreate conversion logic. Reuse app/exceptions.py XMLValidationError exception class. Reuse app/routes/convert.py convert_bp Blueprint - add route to existing file.
+        </constraint>
+        <constraint type="error-handling">
+      Error handling must follow architecture error response format: {error: {code, message, details}}. HTTP status codes: 400 for client errors (invalid Content-Type, malformed XML), 500 for server errors. Error messages must be clear and actionable.
+        </constraint>
+        <constraint type="content-type">
+      Content-Type header validation: accept application/xml or text/xml. Reject requests with invalid or missing Content-Type header with HTTP 400 error response.
+        </constraint>
+    </constraints>
+
+    <interfaces>
+        <interface name="convert_xml_to_json" kind="route handler" signature="@convert_bp.route('/convert/xml-to-json', methods=['POST']) def convert_xml_to_json()" path="app/routes/convert.py">
+      POST endpoint route handler that accepts XML in request body, validates Content-Type header, calls convert_xml_string_to_json() service, and returns Flask JSON response. Handles XMLValidationError exceptions and returns appropriate HTTP status codes.
+        </interface>
+        <interface name="convert_xml_string_to_json" kind="function signature" signature="def convert_xml_string_to_json(xml_string: str) -> Dict[str, Any]" path="app/services/json_converter.py">
+      JSON conversion service function to REUSE from Story 1.3. Accepts XML string and returns JSON-serializable dict. Raises XMLValidationError on invalid XML. This interface must be imported and used by route handler.
+        </interface>
+        <interface name="XMLValidationError" kind="exception class" signature="class XMLValidationError(Exception): message, line, column" path="app/exceptions.py">
+      Custom exception class to REUSE from Story 1.2. Should be caught when calling convert_xml_string_to_json() in route handler. Includes error message, line number, and column number for actionable error reporting.
+        </interface>
+    </interfaces>
+
+    <tests>
+        <standards>
+      Use pytest framework for all testing. Integration tests in tests/integration/ for endpoint testing. Test organization mirrors source structure. Use Flask test client for integration testing. Follow patterns established in test_health.py from Story 1.1. Test request/response cycles end-to-end.
+        </standards>
+        <locations>
+            <location>tests/integration/</location>
+        </locations>
+        <ideas>
+            <idea ac="1">Test POST endpoint accepts XML in request body: send POST request with XML body, verify endpoint receives and processes XML, verify no errors with valid XML</idea>
+            <idea ac="2">Test Content-Type validation: test with application/xml header (success), test with text/xml header (success), test with invalid Content-Type (400 error), test with missing Content-Type (400 error), verify error message indicates required Content-Type values</idea>
+            <idea ac="3">Test endpoint calls conversion service: verify convert_xml_string_to_json() is called, verify service receives correct XML string, verify service output is used in response</idea>
+            <idea ac="4">Test HTTP 200 response on success: verify successful request returns 200 status, verify response body contains JSON, verify JSON structure matches converted XML</idea>
+            <idea ac="5">Test Content-Type response header: verify response has Content-Type: application/json header, verify header is correctly set</idea>
+            <idea ac="6">Test end-to-end conversion flow: send XML string in POST request, verify XML is parsed and converted, verify JSON response matches expected output, test with various XML structures (simple, nested, with attributes), test with malformed XML (error handling), test error responses (invalid Content-Type, malformed XML)</idea>
+        </ideas>
+    </tests>
+</story-context>
+

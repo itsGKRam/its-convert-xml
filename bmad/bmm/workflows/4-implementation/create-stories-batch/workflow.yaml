@@ -1,0 +1,36 @@
+name: create-stories-batch
+description: "Create multiple user stories in batch from epics/PRD and architecture, using the create-story workflow repeatedly"
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/bmad/bmm/config.yaml"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+# Workflow components
+installed_path: "{project-root}/bmad/bmm/workflows/4-implementation/create-stories-batch"
+instructions: "{installed_path}/instructions.md"
+
+# Variables and inputs
+variables:
+  story_dir: "{config_source}:dev_story_location" # Directory where stories are stored
+  epics_file: "{output_folder}/epics.md" # Preferred source for epic/story breakdown
+  prd_file: "{output_folder}/PRD.md" # Fallback for requirements
+  architecture_file: "{output_folder}/architecture.md" # Optional architecture context
+  sprint_status_file: "{output_folder}/sprint-status.yaml" # Sprint tracking file
+  max_stories: "" # Maximum number of stories to create (empty = all backlog)
+  non_interactive: true # Generate without elicitation; avoid interactive prompts
+
+# Output configuration
+# No default output file - this workflow orchestrates multiple story creations
+
+recommended_inputs:
+  - epics: "Epic breakdown (epics.md)"
+  - prd: "PRD document"
+  - architecture: "Architecture (optional)"
+  - sprint_status: "Sprint status tracking (sprint-status.yaml)"
+
+standalone: true
+

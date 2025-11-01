@@ -1,0 +1,275 @@
+openapi: 3.0.3
+info:
+  title: XML to JSON Conversion API
+  description: |
+    A production-ready REST API for converting XML data to JSON format.
+    Handles large files efficiently (up to 300MB) with clear error reporting.
+    
+    **Features:**
+    - Fast and accurate XML to JSON conversion
+    - Support for XML attributes, namespaces, and nested structures
+    - Data type preservation (strings, numbers, booleans)
+    - Performance optimized for large files (< 30 seconds for 300MB files)
+  version: 1.0.0
+  contact:
+    name: API Support
+    # email: support@example.com  # Update with actual support contact
+  license:
+    name: MIT
+    # url: https://opensource.org/licenses/MIT  # Update if different license
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+  - url: https://api.example.com
+    description: Production server
+    # Update with actual production URL
+
+tags:
+  - name: Health
+    description: Health check and monitoring endpoints
+  - name: Conversion
+    description: XML to JSON conversion endpoints
+
+paths:
+  /health:
+    get:
+      tags:
+        - Health
+      summary: Health check
+      description: |
+        Health check endpoint for monitoring and orchestration platforms
+        (Kubernetes, ECS, etc.). Returns service health status.
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+              example:
+                status: healthy
+
+  /convert/xml-to-json:
+    post:
+      tags:
+        - Conversion
+      summary: Convert XML to JSON
+      description: |
+        Converts XML data to JSON format. Accepts XML content in the request body
+        and returns the JSON representation.
+        
+        **Features:**
+        - Handles XML attributes (converted to `@attribute` keys)
+        - Preserves XML namespaces
+        - Supports deeply nested structures
+        - Preserves data types (strings, numbers, booleans)
+        - Processes files up to 300MB
+        
+        **Performance:**
+        - Small files (< 1MB): < 1 second
+        - Medium files (1-10MB): 1-5 seconds
+        - Large files (10-300MB): < 30 seconds
+      operationId: convertXmlToJson
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              format: binary
+              description: XML content to convert
+              example: |
+                <root>
+                  <name>John</name>
+                  <age>30</age>
+                </root>
+          text/xml:
+            schema:
+              type: string
+              format: binary
+              description: XML content to convert
+              example: |
+                <root>
+                  <name>John</name>
+                  <age>30</age>
+                </root>
+      responses:
+        '200':
+          description: Successful conversion
+          content:
+            application/json:
+              schema:
+                type: object
+                description: JSON representation of the input XML
+                additionalProperties: true
+              examples:
+                simple:
+                  summary: Simple XML conversion
+                  value:
+                    root:
+                      name: John
+                      age: 30
+                with_attributes:
+                  summary: XML with attributes
+                  value:
+                    user:
+                      "@id": "123"
+                      "@active": true
+                      name: Alice
+                      email: alice@example.com
+                nested:
+                  summary: Nested XML structure
+                  value:
+                    catalog:
+                      book:
+                        title: Python Guide
+                        author:
+                          name: John Doe
+                          email: john@example.com
+                        price: 29.99
+                with_namespaces:
+                  summary: XML with namespaces
+                  value:
+                    root:
+                      "@xmlns:ns": "http://example.com/namespace"
+                      "ns:item": Value
+        '400':
+          description: Client error (invalid Content-Type, malformed XML, empty body)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid_content_type:
+                  summary: Invalid Content-Type header
+                  value:
+                    error:
+                      code: INVALID_CONTENT_TYPE
+                      message: Content-Type must be application/xml or text/xml
+                      details: Received Content-Type: application/json
+                xml_parse_error:
+                  summary: Malformed XML
+                  value:
+                    error:
+                      code: XML_PARSE_ERROR
+                      message: XML syntax error: mismatched tag
+                      details: Line 5, column 12
+                empty_body:
+                  summary: Empty request body
+                  value:
+                    error:
+                      code: EMPTY_REQUEST_BODY
+                      message: Request body is empty
+                      details: XML content is required in the request body
+        '413':
+          description: Request size exceeds 300MB limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: FILE_SIZE_EXCEEDED
+                  message: Request size exceeds maximum limit of 300MB
+                  details: Maximum allowed size is 300MB (314572800 bytes)
+        '500':
+          description: Server-side conversion error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: SERVER_ERROR
+                  message: An unexpected error occurred during conversion
+                  details: Internal server error
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Error code identifier
+              enum:
+                - INVALID_CONTENT_TYPE
+                - XML_PARSE_ERROR
+                - FILE_SIZE_EXCEEDED
+                - EMPTY_REQUEST_BODY
+                - REQUEST_READ_ERROR
+                - CONVERSION_ERROR
+                - SERVER_ERROR
+              example: XML_PARSE_ERROR
+            message:
+              type: string
+              description: Human-readable error message
+              example: XML syntax error: mismatched tag
+            details:
+              type: string
+              description: Additional context or location information (optional)
+              example: Line 5, column 12
+
+  parameters:
+    ContentTypeHeader:
+      name: Content-Type
+      in: header
+      required: true
+      description: |
+        Content type of the request body. Must be either `application/xml` or `text/xml`.
+      schema:
+        type: string
+        enum:
+          - application/xml
+          - text/xml
+      example: application/xml
+
+  examples:
+    SimpleXML:
+      summary: Simple XML structure
+      value: |
+        <root>
+          <name>John</name>
+          <age>30</age>
+        </root>
+    XMLWithAttributes:
+      summary: XML with attributes
+      value: |
+        <user id="123" active="true">
+          <name>Alice</name>
+          <email>alice@example.com</email>
+        </user>
+    NestedXML:
+      summary: Nested XML structure
+      value: |
+        <catalog>
+          <book>
+            <title>Python Guide</title>
+            <author>
+              <name>John Doe</name>
+              <email>john@example.com</email>
+            </author>
+            <price>29.99</price>
+          </book>
+        </catalog>
+    XMLWithNamespaces:
+      summary: XML with namespaces
+      value: |
+        <root xmlns:ns="http://example.com/namespace">
+          <ns:item>Value</ns:item>
+        </root>
+

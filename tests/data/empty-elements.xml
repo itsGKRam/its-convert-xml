@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <empty1></empty1>
+    <empty2 />
+    <empty3 attr="value"></empty3>
+    <with-content>content</with-content>
+    <empty4 />
+</root>
+
+

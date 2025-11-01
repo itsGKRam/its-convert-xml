@@ -1,0 +1,203 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+    <metadata>
+        <epicId>1</epicId>
+        <storyId>1.9</storyId>
+        <title>Documentation and API Readiness</title>
+        <status>drafted</status>
+        <generatedAt>2025-10-30</generatedAt>
+        <generator>BMAD Story Context Workflow</generator>
+        <sourceStoryPath>docs/stories/1-9-documentation-and-api-readiness.md</sourceStoryPath>
+    </metadata>
+
+    <story>
+        <asA>API consumer</asA>
+        <iWant>clear API documentation and examples</iWant>
+        <soThat>I can quickly understand and integrate with the service</soThat>
+        <tasks>
+            <task id="1" acs="1,5">
+                <title>Create comprehensive README.md</title>
+                <subtasks>
+                    <subtask>Review existing README.md and identify gaps</subtask>
+                    <subtask>Add or update project overview and description</subtask>
+                    <subtask>Document setup instructions: Python 3.11, virtual environment, installation commands</subtask>
+                    <subtask>Document API overview: available endpoints, request/response formats, supported input/output formats</subtask>
+                    <subtask>Add usage examples: curl example, XML input and JSON output examples, Python client example (optional)</subtask>
+                    <subtask>Include testing instructions: pytest</subtask>
+                    <subtask>Add links to detailed documentation sections</subtask>
+                    <subtask>Ensure README follows best practices (clear structure, badges, etc.)</subtask>
+                </subtasks>
+            </task>
+            <task id="2" acs="2">
+                <title>Document API endpoint details</title>
+                <subtasks>
+                    <subtask>Create docs/api-reference.md or update README with API reference section</subtask>
+                    <subtask>Document /convert/xml-to-json endpoint: HTTP method, URL path, request headers, request body, response status codes, response headers, response body</subtask>
+                    <subtask>Include complete request/response examples: XML input, JSON output, error responses</subtask>
+                    <subtask>Document size limits: 300MB maximum</subtask>
+                    <subtask>Document performance characteristics: < 30 seconds for 300MB files</subtask>
+                </subtasks>
+            </task>
+            <task id="3" acs="3">
+                <title>Document error response formats</title>
+                <subtasks>
+                    <subtask>Create docs/error-reference.md or include in API reference</subtask>
+                    <subtask>Document structured error response format: {error: {code, message, details}}</subtask>
+                    <subtask>Document all error codes: INVALID_CONTENT_TYPE, XML_PARSE_ERROR, FILE_SIZE_EXCEEDED, CONVERSION_ERROR, SERVER_ERROR</subtask>
+                    <subtask>Include example error responses for each error code: HTTP 400, 413, 500 examples</subtask>
+                    <subtask>Document HTTP status code mapping: 400 (client), 413 (size limit), 500 (server)</subtask>
+                    <subtask>Include troubleshooting guidance for common errors</subtask>
+                </subtasks>
+            </task>
+            <task id="4" acs="4">
+                <title>Create OpenAPI/Swagger specification</title>
+                <subtasks>
+                    <subtask>Install OpenAPI/Swagger tools (flask-swagger-ui or similar)</subtask>
+                    <subtask>Create docs/openapi.yaml or docs/swagger.yaml specification file</subtask>
+                    <subtask>Define API structure: API title, version, description, server URLs, paths</subtask>
+                    <subtask>Define request schema: POST method, Content-Type header requirement, request body XML content, request size limit 300MB</subtask>
+                    <subtask>Define response schemas: 200 Success, 400 Bad Request, 413 Payload Too Large, 500 Internal Server Error</subtask>
+                    <subtask>Include example requests and responses</subtask>
+                    <subtask>Generate or integrate Swagger UI for interactive documentation (optional)</subtask>
+                    <subtask>Document how to view/use OpenAPI specification</subtask>
+                </subtasks>
+            </task>
+            <task id="5" acs="5">
+                <title>Create example files and documentation</title>
+                <subtasks>
+                    <subtask>Create docs/examples/ directory for example files</subtask>
+                    <subtask>Create example XML files: simple.xml, nested.xml, namespaced.xml, with-attributes.xml</subtask>
+                    <subtask>Create corresponding example JSON outputs: simple.json, nested.json, namespaced.json, with-attributes.json</subtask>
+                    <subtask>Document example usage in README or examples/README.md</subtask>
+                    <subtask>Include curl commands showing how to use examples</subtask>
+                    <subtask>Ensure examples demonstrate key conversion features (namespaces, attributes, nesting)</subtask>
+                </subtasks>
+            </task>
+            <task id="6" acs="1,2,3,5">
+                <title>Review and organize all documentation</title>
+                <subtasks>
+                    <subtask>Review all documentation files for consistency and completeness</subtask>
+                    <subtask>Ensure all documentation references are accurate and up-to-date</subtask>
+                    <subtask>Create documentation index or table of contents</subtask>
+                    <subtask>Verify all examples work correctly</subtask>
+                    <subtask>Check for broken links or missing references</subtask>
+                    <subtask>Ensure documentation follows consistent style and formatting</subtask>
+                    <subtask>Update README.md with links to all documentation sections</subtask>
+                </subtasks>
+            </task>
+        </tasks>
+    </story>
+
+    <acceptanceCriteria>
+        <ac id="1">README.md with setup instructions, usage examples, and API overview</ac>
+        <ac id="2">API endpoint documented with request/response examples</ac>
+        <ac id="3">Error response formats documented with examples</ac>
+        <ac id="4">OpenAPI/Swagger specification file (optional but recommended)</ac>
+        <ac id="5">Example XML inputs and expected JSON outputs in documentation</ac>
+    </acceptanceCriteria>
+
+    <artifacts>
+        <docs>
+            <doc path="docs/epics.md" title="Epic Breakdown" section="Story 1.9">
+                Story 1.9: Documentation and API Readiness - defines requirements for comprehensive README, API endpoint documentation, error response documentation, OpenAPI specification, and example files.
+            </doc>
+            <doc path="docs/PRD.md" title="Product Requirements Document" section="Requirements">
+                Product requirements document with API specifications, functional requirements, and user journeys. Source for API behavior documentation.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="API Contracts">
+                Complete API contract documentation including POST /convert/xml-to-json endpoint specification, request/response formats, error response format with error codes, and HTTP status code mapping.
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Error Response Format">
+                Structured error response format: {error: {code, message, details}}. Error codes: INVALID_CONTENT_TYPE, XML_PARSE_ERROR, FILE_SIZE_EXCEEDED, CONVERSION_ERROR, SERVER_ERROR. HTTP status codes: 400 (client error), 413 (payload too large), 500 (server error).
+            </doc>
+            <doc path="docs/architecture.md" title="Decision Architecture" section="Decision Summary">
+                Technology stack decisions: Python 3.11, Flask 3.0.x, pytest, Gunicorn. OpenAPI/Swagger recommended for API documentation.
+            </doc>
+            <doc path="docs/stories/1-8-testing-infrastructure-and-coverage.md" title="Story 1.8" section="Tasks">
+                Testing strategy documented. Include testing instructions in README: pytest, pytest tests/unit/, pytest tests/integration/, pytest --cov app --cov-report html.
+            </doc>
+            <doc path="docs/stories/1-7-performance-optimization-for-large-files.md" title="Story 1.7" section="Tasks">
+                Performance characteristics documented: < 30 seconds for 300MB files. Performance baseline documentation reference for API documentation.
+            </doc>
+            <doc path="docs/stories/1-6-request-size-validation-and-limits.md" title="Story 1.6" section="Dev Notes">
+                Request size limits: 300MB maximum. Document size limits in API documentation.
+            </doc>
+            <doc path="docs/stories/1-5-error-handling-and-structured-error-responses.md" title="Story 1.5" section="Dev Notes">
+                Error response format and error codes defined. Document all error codes and formats with examples.
+            </doc>
+            <doc path="docs/stories/1-4-post-endpoint-for-xml-to-json.md" title="Story 1.4" section="Dev Notes">
+                Endpoint implementation: /convert/xml-to-json POST endpoint. Content-Type header requirements (application/xml, text/xml). Response format (application/json).
+            </doc>
+            <doc path="README.md" title="README" section="All sections">
+                Existing README.md with project overview, setup instructions, technology stack, project structure, running instructions, testing instructions, configuration, and basic API endpoints. Needs enhancement with API documentation, examples, and error handling documentation.
+            </doc>
+        </docs>
+        <code>
+            <artifact path="README.md" kind="documentation" symbol="" lines="1-203" reason="Main documentation file. EXISTS, needs update with API documentation, usage examples, and links to detailed docs">
+                Existing README.md with project overview, setup instructions, technology stack, basic API endpoints (GET /health). Needs enhancement: API overview, usage examples, XML-to-JSON endpoint documentation, error handling guide, links to detailed docs.
+            </artifact>
+            <artifact path="app/routes/convert.py" kind="route handler" symbol="convert_bp" lines="1-26" reason="Route handler implementation. Reference for accurate endpoint documentation. Currently has health check endpoint, XML-to-JSON endpoint will be added in Story 1.4">
+                Conversion route handlers. Contains health check endpoint (/health). XML-to-JSON endpoint (/convert/xml-to-json) will be implemented in Story 1.4. Reference for endpoint documentation accuracy.
+            </artifact>
+            <artifact path="docs/" kind="documentation directory" symbol="" lines="" reason="Documentation directory. EXISTS, expand with api-reference.md, error-reference.md, openapi.yaml, examples/ subdirectory">
+                Documentation directory. Currently contains PRD.md, epics.md, architecture.md, stories/. Needs: api-reference.md, error-reference.md, openapi.yaml (or swagger.yaml), examples/ subdirectory.
+            </artifact>
+        </code>
+        <dependencies>
+            <python>
+                <package name="flask-swagger-ui" version="Latest">Optional package for Swagger UI integration. For interactive API documentation</package>
+            </python>
+        </dependencies>
+    </artifacts>
+
+    <constraints>
+        <constraint type="architecture">
+            Follow exact directory structure from Architecture document. README.md at project root. Documentation in docs/ directory. Examples in docs/examples/ directory (NEW). OpenAPI spec in docs/openapi.yaml or docs/swagger.yaml (NEW).
+        </constraint>
+        <constraint type="documentation-style">
+            Documentation must be clear, accurate, and include practical examples. Follow existing documentation style and formatting. Ensure all examples work correctly. Verify all references are accurate and up-to-date.
+        </constraint>
+        <constraint type="api-documentation">
+            API documentation MUST accurately reflect implementation. Document /convert/xml-to-json endpoint: POST method, Content-Type headers (application/xml, text/xml), request body XML (up to 300MB), response 200 (JSON), error responses 400/413/500.
+        </constraint>
+        <constraint type="error-documentation">
+            MUST document all error codes: INVALID_CONTENT_TYPE, XML_PARSE_ERROR, FILE_SIZE_EXCEEDED, CONVERSION_ERROR, SERVER_ERROR. Include examples for each error code with HTTP status codes (400, 413, 500).
+        </constraint>
+        <constraint type="examples">
+            Example files must demonstrate key conversion features: namespaces, attributes, nesting, mixed content. Include both XML input and expected JSON output pairs. Document usage with curl commands.
+        </constraint>
+        <constraint type="openapi">
+            OpenAPI/Swagger specification is optional but recommended. Define complete API structure with request/response schemas, error responses, and examples. May integrate Swagger UI for interactive documentation.
+        </constraint>
+        <constraint type="reuse">
+            REUSE existing README.md - update and enhance, don't recreate. REUSE docs/ directory structure. REUSE architecture.md API contracts section for documentation accuracy.
+        </constraint>
+    </constraints>
+
+    <interfaces>
+        <interface name="POST /convert/xml-to-json" kind="REST endpoint" signature="POST /convert/xml-to-json" path="app/routes/convert.py">
+            XML-to-JSON conversion endpoint. Accepts XML in request body (up to 300MB), Content-Type: application/xml or text/xml. Returns JSON representation. Response: 200 (success), 400 (client error), 413 (size limit), 500 (server error).
+        </interface>
+        <interface name="GET /health" kind="REST endpoint" signature="GET /health" path="app/routes/convert.py">
+            Health check endpoint. Returns {"status": "healthy"} with HTTP 200. Already documented in README, maintain consistency.
+        </interface>
+    </interfaces>
+
+    <tests>
+        <standards>
+            Verify all documentation examples work correctly. Test curl examples against running service (if available). Ensure all code examples are syntactically correct. Review documentation for accuracy against implementation.
+        </standards>
+        <locations>
+            README.md (main documentation), docs/api-reference.md (NEW), docs/error-reference.md (NEW), docs/openapi.yaml (NEW), docs/examples/ (NEW directory with example files)
+        </locations>
+        <ideas>
+            <test ac="1">Verify README setup instructions: test Python 3.11 installation, virtual environment setup, pip install commands</test>
+            <test ac="1,5">Test usage examples: verify curl commands work correctly, verify XML input and JSON output examples are accurate</test>
+            <test ac="2">Verify API endpoint documentation: test actual endpoint behavior matches documented request/response formats</test>
+            <test ac="3">Verify error documentation: test actual error responses match documented error codes and formats</test>
+            <test ac="4">Validate OpenAPI spec: ensure OpenAPI YAML is valid, test with OpenAPI validator tool</test>
+            <test ac="5">Test example files: verify example XML files are valid XML, verify JSON output examples match actual conversion results</test>
+            <test ac="1,2,3,5">Documentation review: check for broken links, verify all references are accurate, ensure consistent style and formatting</test>
+        </ideas>
+    </tests>
+</story-context>
+
