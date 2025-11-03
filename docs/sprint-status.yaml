@@ -50,11 +50,11 @@ development_status:
   epic-1-retrospective: completed
 
   epic-2: backlog
-  2-1-xml-to-csv-conversion-engine: backlog
-  2-2-post-endpoint-for-xml-to-csv: backlog
-  2-3-xml-to-string-plain-text-conversion-engine: backlog
-  2-4-post-endpoint-for-xml-to-string: backlog
-  2-5-xml-to-yaml-conversion-engine: backlog
-  2-6-post-endpoint-for-xml-to-yaml: backlog
-  2-7-cross-format-consistency-and-final-testing: backlog
+  2-1-xml-to-csv-conversion-engine: review
+  2-2-post-endpoint-for-xml-to-csv: review
+  2-3-xml-to-string-plain-text-conversion-engine: drafted
+  2-4-post-endpoint-for-xml-to-string: drafted
+  2-5-xml-to-yaml-conversion-engine: drafted
+  2-6-post-endpoint-for-xml-to-yaml: drafted
+  2-7-cross-format-consistency-and-final-testing: drafted
   epic-2-retrospective: optional

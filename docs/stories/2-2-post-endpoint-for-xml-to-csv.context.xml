@@ -1,0 +1,334 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2</storyId>
+    <title>POST Endpoint for XML-to-CSV</title>
+    <status>drafted</status>
+    <generatedAt>2025-10-31</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/2-2-post-endpoint-for-xml-to-csv.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>API consumer</asA>
+    <iWant>send XML data via POST request and receive CSV response</iWant>
+    <soThat>I can integrate CSV conversion into my applications</soThat>
+    <tasks>
+      <task>
+        <name>Task 1: Add CSV endpoint to routes</name>
+        <ac>1, 2, 3, 4, 5</ac>
+        <subtasks>
+          <subtask>Open `app/routes/convert.py`</subtask>
+          <subtask>Import csv_converter service from `app/services/csv_converter.py`</subtask>
+          <subtask>Create new route handler `convert_xml_to_csv()` following JSON endpoint pattern</subtask>
+          <subtask>Register route `/convert/xml-to-csv` with POST method</subtask>
+          <subtask>Reuse XML parsing and validation from Epic 1 (call xml_parser service)</subtask>
+          <subtask>Call CSV conversion function from csv_converter service</subtask>
+          <subtask>Return HTTP 200 with CSV response body</subtask>
+          <subtask>Set Content-Type header to `text/csv`</subtask>
+          <subtask>Ensure error handling matches JSON endpoint pattern</subtask>
+        </subtasks>
+      </task>
+      <task>
+        <name>Task 2: Integrate error handling consistency</name>
+        <ac>6</ac>
+        <subtasks>
+          <subtask>Review error handling in JSON endpoint (`/convert/xml-to-json`)</subtask>
+          <subtask>Apply same error handling approach to CSV endpoint</subtask>
+          <subtask>Verify HTTP 400 for client errors (malformed XML, invalid Content-Type)</subtask>
+          <subtask>Verify HTTP 413 for requests exceeding 300MB size limit</subtask>
+          <subtask>Verify HTTP 500 for server errors with generic message</subtask>
+          <subtask>Ensure error responses use JSON format (consistent with Epic 1)</subtask>
+        </subtasks>
+      </task>
+      <task>
+        <name>Task 3: Write integration tests</name>
+        <ac>7</ac>
+        <subtasks>
+          <subtask>Create or update `tests/integration/test_endpoints.py`</subtask>
+          <subtask>Add test for successful CSV conversion: `test_xml_to_csv_endpoint_success()`</subtask>
+          <subtask>Add test for malformed XML: `test_xml_to_csv_endpoint_malformed_xml()`</subtask>
+          <subtask>Add test for invalid Content-Type: `test_xml_to_csv_endpoint_invalid_content_type()`</subtask>
+          <subtask>Add test for size limit enforcement: `test_xml_to_csv_endpoint_size_limit()`</subtask>
+          <subtask>Verify response Content-Type header is `text/csv`</subtask>
+          <subtask>Verify response body is valid CSV format</subtask>
+          <subtask>Use Flask test client following integration test patterns</subtask>
+        </subtasks>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="1">POST endpoint `/convert/xml-to-csv` accepts XML in request body</criterion>
+    <criterion id="2">Endpoint reuses XML parsing and validation from Epic 1</criterion>
+    <criterion id="3">Endpoint calls CSV conversion function from Story 2.1</criterion>
+    <criterion id="4">Returns HTTP 200 with CSV response body on success</criterion>
+    <criterion id="5">Returns appropriate Content-Type header (`text/csv`)</criterion>
+    <criterion id="6">Error handling consistent with `/convert/xml-to-json` endpoint</criterion>
+    <criterion id="7">Integration tests verify end-to-end CSV conversion flow</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 2.2: POST Endpoint for XML-to-CSV</section>
+        <snippet>Story 2.2 defines the POST endpoint for XML-to-CSV conversion that reuses XML parsing/validation, calls CSV conversion service, returns CSV with proper Content-Type, and maintains consistent error handling.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Functional Requirements</section>
+        <snippet>FR015 specifies API must provide POST endpoint for XML to CSV conversion. FR018 ensures consistent error handling across all conversion format endpoints.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>API Contracts</section>
+        <snippet>POST /convert/xml-to-csv endpoint specification: Accepts XML in request body, returns HTTP 200 with CSV response body, Content-Type header `text/csv`, error responses same as xml-to-json endpoint.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Error Response Format</section>
+        <snippet>All endpoints return consistent JSON error format: {error: {code, message, details}}. HTTP status codes: 400 (client error), 413 (payload too large), 500 (server error).</snippet>
+      </doc>
+      <doc>
+        <path>docs/testing-strategy.md</path>
+        <title>Testing Strategy and Usage</title>
+        <section>Integration Tests</section>
+        <snippet>Integration tests in tests/integration/ verify full request/response cycles using Flask test client. Test endpoints with real request/response flows, error paths, and response headers.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/1-4-post-endpoint-for-xml-to-json.md</path>
+        <title>Story 1.4: POST Endpoint for XML-to-JSON</title>
+        <section>Dev Agent Record</section>
+        <snippet>JSON endpoint implementation established at app/routes/convert.py. Route handler pattern: validate request size, validate Content-Type, parse XML, call conversion service, return response. Follow same pattern for CSV endpoint.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/2-1-xml-to-csv-conversion-engine.md</path>
+        <title>Story 2.1: XML-to-CSV Conversion Engine</title>
+        <section>Dev Agent Record</section>
+        <snippet>CSV converter service will be available at app/services/csv_converter.py with convert_xml_to_csv() function. Endpoint should import and call this service function.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>app/routes/convert.py</path>
+        <kind>route</kind>
+        <symbol>convert_xml_to_json()</symbol>
+        <lines>43-198</lines>
+        <reason>Reference implementation for CSV endpoint. Shows complete pattern: validate request size, validate Content-Type, read request body, call conversion service, handle errors, return response with proper Content-Type header. CSV endpoint should follow same pattern but return CSV with text/csv header.</reason>
+      </artifact>
+      <artifact>
+        <path>app/routes/convert.py</path>
+        <kind>route</kind>
+        <symbol>convert_bp</symbol>
+        <lines>26</lines>
+        <reason>Flask Blueprint for conversion routes. CSV endpoint should be added to this same blueprint using @convert_bp.route decorator.</reason>
+      </artifact>
+      <artifact>
+        <path>app/services/csv_converter.py</path>
+        <kind>service</kind>
+        <symbol>convert_xml_to_csv()</symbol>
+        <lines>N/A</lines>
+        <reason>CSV conversion service function (will exist after Story 2.1). Endpoint should import: from app.services.csv_converter import convert_xml_to_csv. Function signature: convert_xml_to_csv(xml_root: etree._Element) -&gt; str. Note: endpoint may need wrapper that accepts XML string and returns CSV string, or endpoint can parse XML then call converter.</reason>
+      </artifact>
+      <artifact>
+        <path>app/services/json_converter.py</path>
+        <kind>service</kind>
+        <symbol>convert_xml_string_to_json()</symbol>
+        <lines>263-316</lines>
+        <reason>Wrapper function pattern that accepts XML string and returns converted output. CSV converter may have similar convert_xml_string_to_csv() wrapper, or endpoint can handle XML parsing directly.</reason>
+      </artifact>
+      <artifact>
+        <path>app/services/xml_parser.py</path>
+        <kind>service</kind>
+        <symbol>parse_xml()</symbol>
+        <lines>19-69</lines>
+        <reason>Use this function to parse XML strings in endpoint. CSV endpoint should reuse same XML parsing and validation as JSON endpoint.</reason>
+      </artifact>
+      <artifact>
+        <path>app/utils/validators.py</path>
+        <kind>utility</kind>
+        <symbol>validate_request_size()</symbol>
+        <lines>150-231</lines>
+        <reason>Request size validation function. CSV endpoint should call validate_request_size(request) before processing, same as JSON endpoint.</reason>
+      </artifact>
+      <artifact>
+        <path>app/utils/validators.py</path>
+        <kind>utility</kind>
+        <symbol>format_content_type_error()</symbol>
+        <lines>94-110</lines>
+        <reason>Content-Type validation error formatter. CSV endpoint should use this for invalid Content-Type errors.</reason>
+      </artifact>
+      <artifact>
+        <path>app/utils/validators.py</path>
+        <kind>utility</kind>
+        <symbol>format_xml_validation_error()</symbol>
+        <lines>60-91</lines>
+        <reason>XML validation error formatter. CSV endpoint should use this for malformed XML errors.</reason>
+      </artifact>
+      <artifact>
+        <path>app/utils/validators.py</path>
+        <kind>utility</kind>
+        <symbol>format_file_size_error()</symbol>
+        <lines>113-128</lines>
+        <reason>File size exceeded error formatter. CSV endpoint should use this for size limit errors.</reason>
+      </artifact>
+      <artifact>
+        <path>app/utils/validators.py</path>
+        <kind>utility</kind>
+        <symbol>format_server_error()</symbol>
+        <lines>131-149</lines>
+        <reason>Server error formatter. CSV endpoint should use this for unexpected errors.</reason>
+      </artifact>
+      <artifact>
+        <path>app/exceptions.py</path>
+        <kind>exception</kind>
+        <symbol>XMLValidationError</symbol>
+        <lines>9-44</lines>
+        <reason>XML parsing errors raise this exception. CSV endpoint should catch XMLValidationError and format using format_xml_validation_error().</reason>
+      </artifact>
+      <artifact>
+        <path>app/exceptions.py</path>
+        <kind>exception</kind>
+        <symbol>FileSizeExceededError</symbol>
+        <lines>47-73</lines>
+        <reason>Request size exceeded errors. CSV endpoint should catch FileSizeExceededError and format using format_file_size_error().</reason>
+      </artifact>
+      <artifact>
+        <path>app/__init__.py</path>
+        <kind>blueprint</kind>
+        <symbol>convert_bp</symbol>
+        <lines>73-74</lines>
+        <reason>Blueprint registration in Flask app factory. CSV endpoint route will automatically be registered when added to convert_bp blueprint.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/integration/</path>
+        <kind>test-directory</kind>
+        <symbol>Integration tests location</symbol>
+        <lines>N/A</lines>
+        <reason>Integration tests should be created in tests/integration/test_endpoints.py. Follow Flask test client patterns from testing strategy documentation.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <python>
+        <package name="Flask" version="&gt;=3.0.0,&lt;4.0.0">Web framework for route handlers (already in requirements.txt)</package>
+        <package name="lxml" version="&gt;=5.0.0">XML parsing library (already in requirements.txt)</package>
+      </python>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>
+      <type>Route Pattern</type>
+      <rule>Follow exact same pattern as convert_xml_to_json() route handler: validate request size, validate Content-Type, read request body, parse XML, call conversion service, handle errors, return response</rule>
+      <source>app/routes/convert.py#convert_xml_to_json</source>
+    </constraint>
+    <constraint>
+      <type>Content-Type</type>
+      <rule>CSV endpoint must return Content-Type header `text/csv` (not application/json). Response body is CSV text, not JSON.</rule>
+      <source>docs/architecture.md#API-Contracts</source>
+    </constraint>
+    <constraint>
+      <type>Error Handling</type>
+      <rule>Error responses must use JSON format even though success response is CSV. Use error formatter functions from app/utils/validators.py: format_content_type_error(), format_xml_validation_error(), format_file_size_error(), format_server_error()</rule>
+      <source>docs/architecture.md#Error-Response-Format</source>
+    </constraint>
+    <constraint>
+      <type>Request Validation</type>
+      <rule>Validate request size BEFORE processing using validate_request_size(request). Validate Content-Type header must be 'application/xml' or 'text/xml'. Same validation as JSON endpoint.</rule>
+      <source>app/routes/convert.py#convert_xml_to_json</source>
+    </constraint>
+    <constraint>
+      <type>XML Parsing</type>
+      <rule>Reuse XML parsing from xml_parser service. CSV endpoint should parse XML same way as JSON endpoint (parse_xml() or parse_xml_streaming() for large files).</rule>
+      <source>docs/epics.md#Story-2.2</source>
+    </constraint>
+    <constraint>
+      <type>Service Integration</type>
+      <rule>Call CSV converter service: convert_xml_to_csv(xml_root) where xml_root is parsed XML element tree. Converter returns CSV string which should be returned as response body.</rule>
+      <source>docs/stories/2-1-xml-to-csv-conversion-engine.md</source>
+    </constraint>
+    <constraint>
+      <type>Route Registration</type>
+      <rule>Add route using @convert_bp.route('/convert/xml-to-csv', methods=['POST']) decorator. Function name: convert_xml_to_csv(). Route is automatically registered via blueprint in app/__init__.py</rule>
+      <source>app/routes/convert.py</source>
+    </constraint>
+    <constraint>
+      <type>Logging</type>
+      <rule>Use same logging pattern as JSON endpoint: log request received, log errors, log successful conversions with performance metrics</rule>
+      <source>app/routes/convert.py#convert_xml_to_json</source>
+    </constraint>
+    <constraint>
+      <type>HTTP Status Codes</type>
+      <rule>200 OK for success, 400 Bad Request for client errors, 413 Payload Too Large for size limit, 500 Internal Server Error for server errors. Same as JSON endpoint.</rule>
+      <source>docs/architecture.md#Error-Response-Format</source>
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>convert_xml_to_csv (route handler)</name>
+      <kind>Flask route</kind>
+      <signature>@convert_bp.route('/convert/xml-to-csv', methods=['POST'])
+def convert_xml_to_csv():</signature>
+      <path>app/routes/convert.py</path>
+      <description>New route handler for CSV conversion endpoint. Follows same pattern as convert_xml_to_json() but returns CSV response with text/csv Content-Type instead of JSON.</description>
+    </interface>
+    <interface>
+      <name>convert_xml_to_csv (service)</name>
+      <kind>function</kind>
+      <signature>def convert_xml_to_csv(xml_root: etree._Element) -&gt; str</signature>
+      <path>app/services/csv_converter.py</path>
+      <description>CSV conversion service function (from Story 2.1). Endpoint should import and call this function with parsed XML element tree. Returns CSV string.</description>
+    </interface>
+    <interface>
+      <name>validate_request_size</name>
+      <kind>function</kind>
+      <signature>def validate_request_size(request: Request) -&gt; None</signature>
+      <path>app/utils/validators.py</path>
+      <description>Use this function to validate request size before processing. Raises FileSizeExceededError if size exceeds 300MB limit.</description>
+    </interface>
+    <interface>
+      <name>parse_xml</name>
+      <kind>function</kind>
+      <signature>def parse_xml(xml_string: str) -&gt; etree._Element</signature>
+      <path>app/services/xml_parser.py</path>
+      <description>Use this to parse XML string in endpoint. Raises XMLValidationError if XML is malformed.</description>
+    </interface>
+    <interface>
+      <name>format_error_response</name>
+      <kind>function</kind>
+      <signature>def format_error_response(code: str, message: str, details: str = None, status_code: int = 400) -&gt; tuple</signature>
+      <path>app/utils/validators.py</path>
+      <description>Base error response formatter. Use specific formatters: format_content_type_error(), format_xml_validation_error(), format_file_size_error(), format_server_error().</description>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Integration tests use pytest with Flask test client. Test structure: tests/integration/test_endpoints.py. Use Flask test client (app.test_client()) for endpoint testing. Test success paths, error paths, Content-Type headers, response format. Follow Arrange-Act-Assert pattern. Use test fixtures from tests/data/ directory.</standards>
+    <locations>
+      <location>tests/integration/</location>
+      <location>tests/data/</location>
+    </locations>
+    <ideas>
+      <idea ac="1">Test POST request to /convert/xml-to-csv with valid XML in request body - verify endpoint accepts request</idea>
+      <idea ac="2">Test endpoint reuses XML parsing - use same XML test fixtures as JSON endpoint tests</idea>
+      <idea ac="3">Test endpoint calls CSV converter service - verify CSV output format matches converter output</idea>
+      <idea ac="4">Test successful conversion returns HTTP 200 with CSV response body</idea>
+      <idea ac="5">Test response Content-Type header is exactly `text/csv` (case-sensitive check)</idea>
+      <idea ac="6">Test error handling: malformed XML returns HTTP 400 with JSON error response (consistent with JSON endpoint)</idea>
+      <idea ac="6">Test error handling: invalid Content-Type returns HTTP 400 with JSON error response</idea>
+      <idea ac="6">Test error handling: request size exceeds 300MB returns HTTP 413 with JSON error response</idea>
+      <idea ac="6">Test error handling: server error returns HTTP 500 with JSON error response (generic message)</idea>
+      <idea ac="6">Test error responses use JSON format (even though success response is CSV) - verify error response structure matches JSON endpoint</idea>
+      <idea ac="7">Test end-to-end flow: POST XML request -&gt; CSV response - verify CSV format is valid, parseable CSV</idea>
+      <idea ac="7">Test CSV output format: verify proper headers, rows, RFC 4180 compliance (quoting, escaping)</idea>
+      <idea ac="7">Test with various XML structures: simple, nested, namespaced - verify CSV output is correct for each</idea>
+    </ideas>
+  </tests>
+</story-context>
+

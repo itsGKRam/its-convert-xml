@@ -1,0 +1,296 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>1</storyId>
+    <title>XML-to-CSV Conversion Engine</title>
+    <status>drafted</status>
+    <generatedAt>2025-10-31</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/stories/2-1-xml-to-csv-conversion-engine.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>API consumer</asA>
+    <iWant>convert XML data to CSV format</iWant>
+    <soThat>I can use the data in spreadsheet applications and data analysis tools</soThat>
+    <tasks>
+      <task>
+        <name>Task 1: Implement XML-to-CSV conversion function</name>
+        <ac>1, 2, 3, 4, 5</ac>
+        <subtasks>
+          <subtask>Create `app/services/csv_converter.py`</subtask>
+          <subtask>Import xml.etree.ElementTree or use parsed XML from xml_parser service</subtask>
+          <subtask>Implement `convert_xml_to_csv()` function signature matching JSON converter pattern</subtask>
+          <subtask>Handle flat XML structures: rows as elements, columns as child elements or attributes</subtask>
+          <subtask>Handle nested structures: implement flattening strategy (document approach)</subtask>
+          <subtask>Use Python csv module (stdlib) for CSV generation</subtask>
+          <subtask>Ensure CSV output follows RFC 4180 standard (proper escaping, quoting)</subtask>
+          <subtask>Handle XML namespaces in column naming (e.g., prefix namespace or include namespace URI)</subtask>
+          <subtask>Handle edge cases: empty elements, missing attributes, special characters in data</subtask>
+          <subtask>Return CSV string output</subtask>
+        </subtasks>
+      </task>
+      <task>
+        <name>Task 2: Write comprehensive unit tests</name>
+        <ac>6</ac>
+        <subtasks>
+          <subtask>Create `tests/unit/test_csv_converter.py`</subtask>
+          <subtask>Test flat XML structure conversion (simple rows/columns)</subtask>
+          <subtask>Test nested XML structure conversion (verify flattening strategy)</subtask>
+          <subtask>Test namespace handling in column names</subtask>
+          <subtask>Test RFC 4180 compliance (quoting, escaping special characters)</subtask>
+          <subtask>Test edge cases: empty XML, single element, attributes only, mixed content</subtask>
+          <subtask>Use test fixtures from `tests/data/` directory</subtask>
+          <subtask>Achieve &gt; 80% coverage target for csv_converter.py</subtask>
+          <subtask>Test error handling consistent with Epic 1 patterns</subtask>
+        </subtasks>
+      </task>
+      <task>
+        <name>Task 3: Integrate error handling patterns from Epic 1</name>
+        <ac>7</ac>
+        <subtasks>
+          <subtask>Review error handling in `app/services/json_converter.py` for patterns</subtask>
+          <subtask>Apply same error handling approach to CSV converter</subtask>
+          <subtask>Use custom exceptions if needed (from `app/exceptions.py`)</subtask>
+          <subtask>Ensure consistent error messages and structure</subtask>
+        </subtasks>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="1">Conversion function transforms XML to CSV format</criterion>
+    <criterion id="2">Handles flat XML structures (rows as elements, columns as child elements or attributes)</criterion>
+    <criterion id="3">Handles nested structures appropriately (flattening strategy documented)</criterion>
+    <criterion id="4">CSV output follows RFC 4180 standard (proper escaping, quoting)</criterion>
+    <criterion id="5">Handles XML namespaces in column naming</criterion>
+    <criterion id="6">Unit tests verify accurate CSV conversion for various XML structures</criterion>
+    <criterion id="7">Error handling consistent with Epic 1 patterns</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 2.1: XML-to-CSV Conversion Engine</section>
+        <snippet>Story 2.1 defines the XML-to-CSV conversion engine with acceptance criteria for handling flat and nested structures, RFC 4180 compliance, namespace handling, and comprehensive testing.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Functional Requirements</section>
+        <snippet>FR015 specifies the API must provide POST endpoint for XML to CSV conversion. NFR004 requires handling files up to 300MB. FR018 ensures consistent error handling across all conversion format endpoints.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Decision Summary</section>
+        <snippet>CSV library decision: csv (stdlib) - Standard library, no external dependency needed. XML parsing uses lxml for better performance and namespace support.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Project Structure</section>
+        <snippet>Project structure defines app/services/ for business logic services. CSV converter should be placed at app/services/csv_converter.py following the established pattern from JSON converter.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Decision Architecture</title>
+        <section>Naming Patterns</section>
+        <snippet>Service files use snake_case: csv_converter.py. Functions use snake_case: convert_xml_to_csv(). API routes use kebab-case in URLs.</snippet>
+      </doc>
+      <doc>
+        <path>docs/testing-strategy.md</path>
+        <title>Testing Strategy and Usage</title>
+        <section>Test Structure</section>
+        <snippet>Unit tests go in tests/unit/ directory. Coverage target is &gt; 80% for core conversion logic. Test fixtures are stored in tests/data/ directory.</snippet>
+      </doc>
+      <doc>
+        <path>docs/testing-strategy.md</path>
+        <title>Testing Strategy and Usage</title>
+        <section>Writing New Tests</section>
+        <snippet>Follow Arrange-Act-Assert pattern. Test files use test_ prefix: test_csv_converter.py. Use test fixtures from tests/data/ directory for consistency.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/1-3-xml-to-json-conversion-engine.md</path>
+        <title>Story 1.3: XML-to-JSON Conversion Engine</title>
+        <section>Dev Agent Record</section>
+        <snippet>JSON converter service implementation pattern established at app/services/json_converter.py. Follow same pattern for CSV converter service with similar structure and error handling.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/1-2-xml-parsing-and-validation-core.md</path>
+        <title>Story 1.2: XML Parsing and Validation Core</title>
+        <section>Dev Agent Record</section>
+        <snippet>XML parser service available at app/services/xml_parser.py. Provides parse_xml() and parse_xml_streaming() functions for parsing XML strings. Reuse this service for CSV converter input.</snippet>
+      </doc>
+      <doc>
+        <path>docs/stories/1-5-error-handling-and-structured-error-responses.md</path>
+        <title>Story 1.5: Error Handling and Structured Error Responses</title>
+        <section>Dev Agent Record</section>
+        <snippet>Error handling patterns established using custom exceptions from app/exceptions.py. XMLValidationError used for XML parsing errors. Maintain consistency with these patterns in CSV converter.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>app/services/json_converter.py</path>
+        <kind>service</kind>
+        <symbol>convert_xml_to_json()</symbol>
+        <lines>67-91</lines>
+        <reason>Reference pattern for CSV converter function signature. Shows how to accept parsed XML element (etree._Element) and return converted output. Follow same pattern: convert_xml_to_csv(xml_root: etree._Element) -&gt; str</reason>
+      </artifact>
+      <artifact>
+        <path>app/services/json_converter.py</path>
+        <kind>service</kind>
+        <symbol>convert_xml_string_to_json()</symbol>
+        <lines>263-316</lines>
+        <reason>Wrapper function pattern that parses XML string then converts. Optional: create convert_xml_string_to_csv() wrapper following same pattern for convenience.</reason>
+      </artifact>
+      <artifact>
+        <path>app/services/json_converter.py</path>
+        <kind>service</kind>
+        <symbol>_element_to_dict()</symbol>
+        <lines>94-205</lines>
+        <reason>Recursive element traversal pattern. CSV converter will need similar recursive logic to traverse XML tree, but instead of building dict, build CSV rows/columns. Shows namespace handling pattern.</reason>
+      </artifact>
+      <artifact>
+        <path>app/services/xml_parser.py</path>
+        <kind>service</kind>
+        <symbol>parse_xml()</symbol>
+        <lines>19-69</lines>
+        <reason>Use this function to parse XML strings into etree._Element. CSV converter should call parse_xml() or use already-parsed element tree from route handler.</reason>
+      </artifact>
+      <artifact>
+        <path>app/services/xml_parser.py</path>
+        <kind>service</kind>
+        <symbol>parse_xml_streaming()</symbol>
+        <lines>72-163</lines>
+        <reason>For large files (&gt;10MB), use streaming parser. CSV converter may benefit from this for large XML inputs when processing rows incrementally.</reason>
+      </artifact>
+      <artifact>
+        <path>app/exceptions.py</path>
+        <kind>exception</kind>
+        <symbol>XMLValidationError</symbol>
+        <lines>9-44</lines>
+        <reason>Use this exception for XML parsing errors. CSV converter should not need new exceptions if reusing xml_parser, but if CSV conversion fails specifically, may need to raise this or standard exception.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/unit/test_json_converter.py</path>
+        <kind>test</kind>
+        <symbol>test_*</symbol>
+        <lines>1-100</lines>
+        <reason>Test file pattern to follow. Shows how to structure tests with fixtures, test flat/nested structures, namespaces, edge cases. Create test_csv_converter.py following same patterns.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/data/</path>
+        <kind>test-fixtures</kind>
+        <symbol>XML test files</symbol>
+        <lines>N/A</lines>
+        <reason>Test fixtures available: simple.xml, nested.xml, with-attributes.xml, namespaced-*.xml, etc. Use these in CSV converter tests for consistency.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <python>
+        <package name="lxml" version="&gt;=5.0.0">XML parsing library (already in requirements.txt)</package>
+        <package name="csv">Python standard library module for CSV generation</package>
+        <package name="Flask" version="&gt;=3.0.0,&lt;4.0.0">Web framework (already in requirements.txt)</package>
+      </python>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>
+      <type>Architecture</type>
+      <rule>Follow exact directory structure: app/services/csv_converter.py for service, tests/unit/test_csv_converter.py for tests</rule>
+      <source>docs/architecture.md#Project-Structure</source>
+    </constraint>
+    <constraint>
+      <type>Naming</type>
+      <rule>Service file: csv_converter.py (snake_case). Function: convert_xml_to_csv() (snake_case). Test file: test_csv_converter.py</rule>
+      <source>docs/architecture.md#Naming-Patterns</source>
+    </constraint>
+    <constraint>
+      <type>Service Pattern</type>
+      <rule>Follow JSON converter service pattern: accept etree._Element from xml_parser, return converted output (CSV string). Keep service logic separate from route handling</rule>
+      <source>docs/stories/1-3-xml-to-json-conversion-engine.md</source>
+    </constraint>
+    <constraint>
+      <type>Error Handling</type>
+      <rule>Reuse XMLValidationError from app/exceptions.py for XML parsing errors. Maintain consistent error handling patterns with JSON converter</rule>
+      <source>docs/stories/1-5-error-handling-and-structured-error-responses.md</source>
+    </constraint>
+    <constraint>
+      <type>Testing</type>
+      <rule>Unit tests in tests/unit/. Use fixtures from tests/data/. Target &gt; 80% coverage. Follow Arrange-Act-Assert pattern</rule>
+      <source>docs/testing-strategy.md</source>
+    </constraint>
+    <constraint>
+      <type>CSV Standard</type>
+      <rule>CSV output must follow RFC 4180 standard: proper escaping, quoting, line endings. Use Python csv module (stdlib) for compliance</rule>
+      <source>docs/epics.md#Story-2.1</source>
+    </constraint>
+    <constraint>
+      <type>Namespace Handling</type>
+      <rule>Handle XML namespaces in column naming (e.g., prefix namespace or include namespace URI). Reference JSON converter namespace handling patterns</rule>
+      <source>docs/epics.md#Story-2.1</source>
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>convert_xml_to_csv</name>
+      <kind>function</kind>
+      <signature>def convert_xml_to_csv(xml_root: etree._Element) -&gt; str</signature>
+      <path>app/services/csv_converter.py</path>
+      <description>Main conversion function. Accepts parsed XML element tree (from xml_parser), returns CSV string. Follow same signature pattern as convert_xml_to_json().</description>
+    </interface>
+    <interface>
+      <name>parse_xml</name>
+      <kind>function</kind>
+      <signature>def parse_xml(xml_string: str) -&gt; etree._Element</signature>
+      <path>app/services/xml_parser.py</path>
+      <description>Use this to parse XML strings. CSV converter should use parsed element tree from this function or accept pre-parsed element.</description>
+    </interface>
+    <interface>
+      <name>convert_xml_to_json</name>
+      <kind>function</kind>
+      <signature>def convert_xml_to_json(xml_root: etree._Element) -&gt; Dict[str, Any]</signature>
+      <path>app/services/json_converter.py</path>
+      <description>Reference implementation pattern. CSV converter should follow similar structure: recursive element traversal, but build CSV rows instead of dict.</description>
+    </interface>
+    <interface>
+      <name>XMLValidationError</name>
+      <kind>exception</kind>
+      <signature>class XMLValidationError(Exception)</signature>
+      <path>app/exceptions.py</path>
+      <description>Use for XML parsing errors. CSV converter may raise this if XML parsing fails, or let xml_parser handle it.</description>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Unit tests use pytest framework. Test structure: tests/unit/test_csv_converter.py. Coverage target: &gt; 80% for csv_converter.py. Follow Arrange-Act-Assert pattern. Use test fixtures from tests/data/ directory. Mark slow tests with @pytest.mark.slow. Test both success and error paths.</standards>
+    <locations>
+      <location>tests/unit/</location>
+      <location>tests/data/</location>
+    </locations>
+    <ideas>
+      <idea ac="1">Test conversion of simple flat XML structure (single root with child elements as columns) to CSV with proper headers</idea>
+      <idea ac="2">Test flat XML where rows are elements and columns are attributes (e.g., &lt;row id="1" name="test"/&gt;)</idea>
+      <idea ac="2">Test flat XML where rows are elements and columns are child elements (e.g., &lt;row&gt;&lt;id&gt;1&lt;/id&gt;&lt;name&gt;test&lt;/name&gt;&lt;/row&gt;)</idea>
+      <idea ac="3">Test nested XML structure conversion - verify flattening strategy (e.g., nested elements flattened into columns like "level1_level2_value")</idea>
+      <idea ac="3">Test deeply nested structures to ensure flattening doesn't create too many columns</idea>
+      <idea ac="4">Test CSV output with special characters (commas, quotes, newlines) - verify RFC 4180 escaping and quoting</idea>
+      <idea ac="4">Test CSV output with empty fields, verify proper handling</idea>
+      <idea ac="5">Test XML with default namespace - verify namespace handling in column names</idea>
+      <idea ac="5">Test XML with prefixed namespaces - verify namespace prefix in column names</idea>
+      <idea ac="5">Test XML with multiple namespaces - verify all namespaces handled correctly</idea>
+      <idea ac="6">Test edge case: empty XML or empty root element</idea>
+      <idea ac="6">Test edge case: single element with no children or attributes</idea>
+      <idea ac="6">Test edge case: XML with only attributes, no text or children</idea>
+      <idea ac="6">Test edge case: mixed content (element with both text and children)</idea>
+      <idea ac="7">Test error handling: malformed XML input (should raise XMLValidationError from xml_parser)</idea>
+      <idea ac="7">Test error handling: ensure error messages consistent with JSON converter</idea>
+    </ideas>
+  </tests>
+</story-context>
+

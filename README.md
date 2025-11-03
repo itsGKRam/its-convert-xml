@@ -99,7 +99,16 @@ cp .env.example .env
 
 ### Development Mode
 
-Run the Flask development server:
+**Option 1: Auto-reload with Watchdog (Recommended for Development)**
+```bash
+# Make sure watchdog is installed
+pip install -r requirements-dev.txt
+
+# Run with automatic restart on file changes
+python run_dev.py
+```
+
+**Option 2: Standard Flask Development Server**
 ```bash
 export FLASK_APP=app
 export FLASK_ENV=development
@@ -112,6 +121,8 @@ python -m flask --app app run
 ```
 
 The application will be available at `http://localhost:5000`
+
+**Note:** The `run_dev.py` script uses watchdog to automatically restart the server when you modify Python files, configuration files, or requirements files. This is especially useful during active development.
 
 ### Quick Start Example
 
